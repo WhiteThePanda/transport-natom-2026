@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Event transport planner</title>
+<style>
+:root{--bg:#f3f1ec;--surf:#fff;--ink:#1d2a26;--mute:#66736e;--line:#d9d6cc;--acc:#0f6b5c;--accink:#fff;--warn:#b3361f;--warnbg:#fbe9e4;--chip:#e6efe9;--pk:#a85a0f;--up:#2f5fa8;--bink:#fff;--c0:#0f6b5c;--c1:#c4501a;--c2:#2f5fa8;--c3:#7a4aa8;--c4:#8a6d00;--c5:#b3365f;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#13191a;--surf:#1c2524;--ink:#e8eeea;--mute:#93a39d;--line:#2f3b39;--acc:#4cc2a8;--accink:#06201a;--warn:#ff9a85;--warnbg:#3a1f1a;--chip:#26352f;--pk:#e3a24a;--up:#8db3ee;--bink:#0d1514;--c0:#4cc2a8;--c1:#f0a06b;--c2:#8db3ee;--c3:#c3a0ec;--c4:#e3c35a;--c5:#f08fb0}}
+:root[data-theme="dark"]{--bg:#13191a;--surf:#1c2524;--ink:#e8eeea;--mute:#93a39d;--line:#2f3b39;--acc:#4cc2a8;--accink:#06201a;--warn:#ff9a85;--warnbg:#3a1f1a;--chip:#26352f;--pk:#e3a24a;--up:#8db3ee;--bink:#0d1514;--c0:#4cc2a8;--c1:#f0a06b;--c2:#8db3ee;--c3:#c3a0ec;--c4:#e3c35a;--c5:#f08fb0}
+*{box-sizing:border-box}
+html,body{margin:0}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:15px/1.4 "Segoe UI",system-ui,-apple-system,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+header{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;padding:12px 14px 4px}
+h1{font:700 19px/1.2 Georgia,"Times New Roman",serif;margin:0}
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--bg);display:flex;gap:6px;padding:8px 14px;overflow-x:auto}
+.tabs button{flex:1 0 auto;border:1px solid var(--line);background:var(--surf);color:var(--ink);border-radius:10px;padding:7px 14px;font:inherit;font-size:14px;cursor:pointer;text-align:center;line-height:1.2}
+.tabs button.on{background:var(--acc);color:var(--accink);border-color:var(--acc)}
+.tabs button small{display:block;font-size:11px;opacity:.8}
+.tabs button.bad::after{content:" •";color:var(--warn)}
+.tabs button.on.bad::after{color:var(--accink)}
+main{padding:4px 14px 40px;max-width:1200px;margin:0 auto}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:12px;margin:0 0 12px}
+.grow{flex:1 1 110px}
+input,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 9px;width:100%;min-width:0;margin-top:6px}
+label{font-size:13px;color:var(--mute);display:block;margin:10px 0 0}
+button.p{background:var(--acc);color:var(--accink);border:0;border-radius:8px;padding:8px 14px;font:inherit;font-weight:600;cursor:pointer}
+button.g,a.g{background:none;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer;text-decoration:none}
+button.g.on{background:var(--chip);border-color:var(--acc)}
+button.x{background:none;border:0;color:var(--mute);font-size:18px;cursor:pointer;padding:2px 8px}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.mute{color:var(--mute);font-size:13px}
+.kp{background:var(--surf);border:1px solid var(--line);border-radius:999px;padding:3px 11px;font-size:13px}
+.kp.bad{background:var(--warnbg);color:var(--warn);border-color:var(--warn)}
+.warn{background:var(--warnbg);color:var(--warn);border-radius:8px;padding:6px 10px;font-size:13px;margin-top:6px}
+button.iss{display:block;width:100%;text-align:left;border:0;font:inherit;font-size:13px;cursor:pointer}
+.mapbox{position:relative;border:1px solid var(--line);border-radius:10px;background:var(--surf);overflow:hidden;margin-bottom:12px}
+.mapbox svg{display:block;width:100%;height:auto}
+.hint{position:absolute;top:8px;left:8px;background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-size:12px;color:var(--mute)}
+.ovl{position:absolute;left:8px;right:8px;bottom:8px;background:var(--surf);border:1px solid var(--acc);border-radius:10px;padding:10px;box-shadow:0 4px 18px rgba(0,0,0,.25)}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pulse{from{transform:scale(1);opacity:.7}to{transform:scale(3.2);opacity:0}}
+.pulse{animation:pulse 1.6s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@media(prefers-reduced-motion:reduce){.pulse{animation:none}.drawn{animation:none!important;stroke-dashoffset:0!important}}
+.pill{display:inline-block;background:var(--chip);border-radius:6px;padding:0 7px;font-size:12px;margin:1px 3px 1px 0}
+.gt{overflow-x:auto}.gt>div{min-width:560px}
+.g2{display:grid;grid-template-columns:92px minmax(0,1fr);gap:6px;align-items:center;margin:3px 0}
+.lbl{font-size:13px;line-height:1.2}.lbl small{display:block;color:var(--mute);font-size:11px}
+.axis{position:relative;height:15px;font-size:11px;color:var(--mute)}.axis span{position:absolute}
+.track{position:relative;height:30px;border-bottom:1px solid var(--line);background-image:linear-gradient(to right,var(--line) 1px,transparent 1px);background-size:calc(100%/var(--n)) 100%}
+.blk{position:absolute;top:3px;height:24px;border:0;border-radius:5px;font-size:11px;padding:0 5px;overflow:hidden;white-space:nowrap;text-align:left;cursor:pointer;color:var(--bink);background:var(--bk)}
+.k-drive{--bk:var(--acc)}.k-ride{--bk:var(--mute)}.k-pack{--bk:var(--pk)}.k-unpack{--bk:var(--up)}
+.blk.bad{outline:2px solid var(--warn);outline-offset:1px}
+.blk.sel{outline:3px solid var(--ink);outline-offset:1px;z-index:2}
+.leg{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--mute);margin:6px 0}
+.leg i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:4px;vertical-align:-1px;background:var(--bk)}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:3px 0 1px}.bar i{display:block;height:100%;background:var(--acc)}.bar i.over{background:var(--warn)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button.tr{display:block;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:8px;padding:8px 10px;margin:6px 0;cursor:pointer}
+button.tr.bad{border-left-color:var(--warn)}button.tr.sel{border-color:var(--acc);background:var(--chip)}
+.note{display:flex;gap:10px;padding:5px 0;border-bottom:1px solid var(--line);font-size:14px}.note:last-child{border:0}.note b{min-width:48px;font-variant-numeric:tabular-nums}
+.item{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border:0}.item.sub{padding-left:16px}
+.item input{margin-top:4px;font-size:13px;padding:5px 8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:5px 11px;font-size:14px;cursor:pointer}
+.chip.on{background:var(--chip);border-color:var(--acc);font-weight:600}
+details{border-top:1px solid var(--line);padding:10px 0}details>summary{font-weight:700;cursor:pointer}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:flex;justify-content:center;align-items:flex-start;padding:env(safe-area-inset-top,0px) 10px env(safe-area-inset-bottom,0px)}
+.sbox{background:var(--surf);border-radius:12px;padding:14px;margin:10px 0;width:100%;max-width:640px;max-height:calc(100% - 20px);overflow:auto}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:10px;font-size:14px;z-index:40;max-width:90%}
+.mapwrap{position:relative;isolation:isolate;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:12px}
+#map{position:relative;height:clamp(440px,64vh,640px);overflow:hidden;touch-action:none;cursor:grab;user-select:none;background-color:var(--bg);background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:40px 40px}
+#map.pick{cursor:crosshair}
+#tiles{position:absolute;left:0;top:0}
+#tiles img{position:absolute;width:256px;height:256px;max-width:none;transition:opacity .25s;-webkit-user-drag:none}
+#ov{position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden}
+.zb{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px;z-index:5}
+.zb button{width:38px;height:38px;border-radius:8px;border:1px solid var(--line);background:var(--surf);color:var(--ink);font-size:22px;cursor:pointer}
+.attr{position:absolute;right:4px;bottom:2px;font-size:10px;background:rgba(255,255,255,.8);color:#333;padding:0 5px;border-radius:3px;z-index:5}
+body:not(.edit) .eo{display:none!important}
+.banner{margin:4px 14px;padding:6px 12px;border-radius:8px;background:var(--chip);font-size:13px}
+.danger{background:var(--warn)!important;color:#fff!important;border-color:var(--warn)!important}
+.cd{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:0}
+.run{border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:10px 0}.run button.tr{margin:6px 0 0}
+.mapwrap .hint{left:10px;z-index:5}.mapwrap .ovl.top{top:10px;bottom:auto;left:10px;right:60px;z-index:5}
+</style>
+</head>
+<body>
+<header><h1>Event transport planner</h1><div class="row"><button class="g eo" id="undo" data-a="undo" hidden>Undo delete</button><button class="g eo" data-a="open-setup">Setup</button><button class="p eo" data-a="new-trip">Add trip</button></div></header>
+<div id="banner" class="banner" hidden></div>
+<nav class="tabs" id="tabs" aria-label="Event days"></nav>
+<main><div class="mapwrap"><div id="map"><div id="tiles"></div><svg id="ov"></svg></div><div id="mapovl"></div><div class="zb"><button data-a="zoom-in" aria-label="Zoom in">+</button><button data-a="zoom-out" aria-label="Zoom out">−</button></div><div class="attr" id="attr">© OpenStreetMap contributors</div></div><div id="mapmsg"></div><div id="app"></div></main>
+<div id="sheet" hidden></div>
+<div id="toast" hidden></div>
+<script>
+const KEY="transport-planner-standalone-v1",H=36e5,M=6e4,KINDS=["Storage","Venue","Ferry","Rental","Parking","Other"];
+const uid=()=>Math.random().toString(36).slice(2,8),$=i=>document.getElementById(i);
+let tT,armed="",armT,undoStack=[];
+function toast(m){const t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(tT);tT=setTimeout(()=>t.hidden=true,3500)}
+function ask(k,m){if(armed===k){armed="";clearTimeout(armT);undoStack.push(JSON.stringify(S));if(undoStack.length>10)undoStack.shift();return true}armed=k;clearTimeout(armT);armT=setTimeout(()=>{armed="";render()},4000);render();toast(m+" Tap the red button again to confirm.");return false}
+function sample(){
+ const k=uid(),m=uid(),at=(i,h,mi)=>new Date(2026,10,12+i,h,mi).getTime();
+ const P=[{id:k,name:"Instrument storage KTH",kind:"Storage",addr:"KTH campus, Stockholm",lat:59.3498,lng:18.0707},
+ {id:uid(),name:"Sqrubben",kind:"Storage",parent:k},{id:uid(),name:"Kröken",kind:"Storage",parent:k},{id:uid(),name:"Nymble",kind:"Storage",parent:k},
+ {id:m,name:"MF (Medicinska Föreningen)",kind:"Venue",addr:"Nobels väg 10, 171 65 Solna",lat:59.35,lng:18.0262},{id:uid(),name:"Aulan",kind:"Venue",parent:m},
+ {id:uid(),name:"Viking Terminalen",kind:"Ferry",addr:"Terminalen Stadsgården, Tegelvikshamn, 116 45 Stockholm",lat:59.3151,lng:18.0959},
+ {id:uid(),name:"Arlanda airport",kind:"Other",addr:"Arlanda",lat:59.6519,lng:17.9186,hide:true},
+ {id:uid(),name:"Odenplan",kind:"Other",addr:"Odenplan, Stockholm",lat:59.3428,lng:18.0495},
+ {id:uid(),name:"OKQ8 (address to determine)",kind:"Rental",addr:""},{id:uid(),name:"Datasektionen parking",kind:"Parking",addr:"Position to be determined"},{id:uid(),name:"Your own parking spot",kind:"Parking",addr:"",flex:true,info:"Park anywhere. Parking is refunded."}],g=n=>P.find(p=>p.name===n).id,ok=g("OKQ8 (address to determine)");
+ const C=[{id:uid(),name:"Car 1",seats:3,cargo:8,from:ok},{id:uid(),name:"Car 2",seats:2,cargo:8,from:g("Datasektionen parking")}];
+ const K="Instrument storage KTH",V="Viking Terminalen",Sq="Sqrubben",Kr="Kröken",Ny="Nymble",Au="Aulan",Od="Odenplan",Ar="Arlanda airport",OK="OKQ8 (address to determine)",DP="Datasektionen parking";
+ const t=(ci,d,h,mi,from,to,min,note)=>({id:uid(),dep:at(d,h,mi),car:C[ci].id,from:g(from),to:g(to),min,driver:"",riders:[],pack:[],unpack:[],packMin:20,unpackMin:20,load:0,note});
+ const both=l=>{const k=x=>x.dep+"|"+x.from+"|"+x.to,out=[...l];l.forEach(x=>C.forEach(c=>{if(!out.some(y=>k(y)===k(x)&&y.car===c.id))out.push({...x,id:uid(),car:c.id})}));return out};
+ const n=(d,h,mi,text,place)=>({id:uid(),at:at(d,h,mi),text,place:place?g(place):""});
+ return{places:P,cars:C,people:["Ana","Ben","Carla","Dev","Elif"].map(name=>({id:uid(),name})),img:null,set:{speed:35,factor:1.3,unit:"m³",start:at(0,0,0),days:4,dayHour:5,traffic:1.25,parking:g("Datasektionen parking"),parkWait:30},
+ trips:both([
+ t(0,1,7,0,V,Sq,0,"Ferry and bus arrive 7:00, instruments to KTH storage"),t(1,1,7,0,V,Sq,0,"Ferry and bus arrive 7:00, instruments to KTH storage"),
+ t(0,1,10,0,V,Kr,0,"Retuperän arrives, stuff to Kröken"),t(1,1,13,30,Ar,K,45,"Part of Strindens at Arlanda, rest unknown"),
+ t(0,1,18,0,Sq,Au,20,"Move to MF, guess: add rounds as needed"),t(1,1,18,0,Kr,Au,20,"Move to MF, guess: add rounds as needed"),
+ t(0,1,19,0,Sq,Au,20,"Move to MF, second round"),t(1,1,19,0,Kr,Au,20,"Move to MF, second round"),
+ t(0,2,9,0,Au,Od,20,"MF storage to Odenplan"),t(1,2,9,0,Au,Od,20,"MF storage to Odenplan"),
+ t(0,2,13,0,Od,Au,20,"Back to MF storage"),t(1,2,13,0,Od,Au,20,"Back to MF storage"),
+ t(0,3,1,0,Au,Sq,20,"All instruments to KTH (people take their own)"),t(1,3,1,0,Au,Kr,20,"All instruments to KTH (people take their own)"),
+ t(0,3,17,0,Ny,V,0,"Finns with return ferry"),t(1,3,17,0,Ny,V,0,"Finns with return ferry"),
+ ].map(x=>x)).concat([t(0,0,17,0,OK,K,0,"Pick up the car from OKQ8, time to confirm"),t(1,0,17,0,DP,K,0,"Pick up the car from Datasektionen parking, time to confirm"),t(0,3,19,0,V,OK,0,"Return the car to OKQ8 after the drop-off"),t(1,3,19,0,V,DP,0,"Return the car to Datasektionen parking after the drop-off")]),
+ notes:[n(0,17,0,"Pick up cars at OKQ8. Taken by the people who drive them very early on Friday."),
+ n(1,7,0,"Ferry arrives, bus arrives for 7:00. Instruments go to KTH storage.",V),n(1,10,0,"Retuperän arrives at Viking Terminalen, stuff to Kröken.",V),
+ n(1,13,30,"Part of Strindens arrives at Arlanda. Arrival time of the rest unknown.",Ar),n(1,14,0,"Alliancen arrive by bus (time told, unconfirmed), likely park close to KTH campus.",K),
+ n(1,15,0,"All instruments are in KTH storage at this point."),n(1,16,30,"KTH authorizes us to start playing."),n(1,18,0,"Around now all instruments move to MF or similar.",Au),
+ n(1,22,0,"Party and gigs at MF until 01:00. Instruments must be there by then.",Au),
+ n(2,9,0,"MF instrument storage to Odenplan.",Od),n(2,13,0,"Back to instrument storage MF.",Au),n(3,1,0,"All instruments transported to KTH. People take their own with them.",K),
+ n(3,18,0,"Ferry check-in around 18:00, departs 20:00. Nymble storage to ferry for those with a return ferry.",V),n(3,20,0,"Give cars back in the evening, after the Finns are dropped at the ferry.",OK)]}}
+const EDIT=location.protocol==="file:"||/[?&]edit(=|&|$)/.test(location.search);document.body.classList.toggle("edit",EDIT);
+let S;try{S=EDIT?JSON.parse(localStorage.getItem(KEY)):null}catch(e){S=null}
+const hadLocal=!!(S&&S.places);
+if(!S||!S.places)S=sample();
+S.set.traffic=S.set.traffic||1.25;S.set.packSlots=S.set.packSlots??2;S.set.unpackSlots=S.set.unpackSlots??2;S.set.sheet=S.set.sheet||"";S.set.parkWait=S.set.parkWait??30;
+let ROUTES={};try{ROUTES=JSON.parse(localStorage.getItem(KEY+"-routes"))||{}}catch(e){}
+let inChange=false,draft=null,setupOpen=false,curDay=0,selId="",rowMode="cars",pick="";const OPEN=new Set(["cars"]);
+const save=()=>{if(!EDIT)return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const by=(a,id)=>a.find(x=>x.id===id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pn=id=>{const p=by(S.places,id);return p?esc(p.name):"?"};
+const rlabel=t=>`${pn(t.from)} to ${pn(t.to)}`;
+const tm=ms=>new Date(ms).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+const local=ms=>new Date(ms-new Date(ms).getTimezoneOffset()*M).toISOString().slice(0,16);
+const names=ids=>ids.length?ids.map(i=>`<span class="pill">${esc(by(S.people,i)?.name||"?")}</span>`).join(""):'<span class="mute">none</span>';
+const carColor=id=>`var(--c${Math.max(0,S.cars.findIndex(c=>c.id===id))%6})`;
+const who=t=>[t.driver,...t.riders].map(i=>by(S.people,i)?.name).filter(Boolean).join(", ")||"No driver yet";
+const dayStart=i=>{const d=new Date(S.set.start);d.setDate(d.getDate()+i);d.setHours(S.set.dayHour,0,0,0);return d.getTime()};
+const dayIdx=ms=>{for(let i=0;i<S.set.days;i++)if(ms>=dayStart(i)&&ms<dayStart(i+1))return i;return -1};
+const dayTrips=i=>S.trips.filter(t=>dayIdx(t.dep)===i).sort((a,b)=>a.dep-b.dep);
+const ll=p=>p&&typeof p.lat==="number"&&typeof p.lng==="number";
+const geo=p=>{if(!p)return null;if(ll(p))return p;const q=p.parent&&by(S.places,p.parent);return ll(q)?q:null};
+const pinOf=p=>{if(!p)return null;if(p.mx!=null)return p;const q=p.parent&&by(S.places,p.parent);return q&&q.mx!=null?q:null};
+const tree=()=>S.places.filter(p=>!p.parent).flatMap(p=>[p,...S.places.filter(c=>c.parent===p.id)]);
+const popts=(f,sel)=>tree().filter(f||(()=>true)).map(p=>`<option value="${p.id}" ${p.id===sel?"selected":""}>${p.parent?"– ":""}${esc(p.name)}</option>`).join("");
+function parseLL(s){const m=String(s).match(/(-?\d+(?:\.\d+)?)\s*[,\s]\s*(-?\d+(?:\.\d+)?)/);if(!m)return null;const a=+m[1],b=+m[2];return Math.abs(a)<=90&&Math.abs(b)<=180?[a,b]:null}
+function dist(a,b){const R=6371,r=x=>x*Math.PI/180,dl=r(b.lat-a.lat),dg=r(b.lng-a.lng),h=Math.sin(dl/2)**2+Math.cos(r(a.lat))*Math.cos(r(b.lat))*Math.sin(dg/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+const rdist=(a,b)=>{const x=geo(a),y=geo(b);return x&&y?dist(x,y):null};
+const flexEnd=t=>[t.from,t.to].some(i=>by(S.places,i)?.flex);
+const flexNote=t=>[t.from,t.to].map(i=>by(S.places,i)).filter(p=>p&&p.flex).map(p=>`<div class="mute">${esc(p.name)}: ${esc(p.info||"Park anywhere.")}</div>`).join("");
+const rkey=(a,b)=>{const x=geo(a),y=geo(b);return x&&y?`${x.lat},${x.lng}|${y.lat},${y.lng}`:null};
+const estT=t=>{const a=by(S.places,t.from),b=by(S.places,t.to),k=rkey(a,b),r=k&&ROUTES[k]||(k&&ROUTES[rkey(b,a)]);if((a&&a.flex)||(b&&b.flex))return 0;if(r)return Math.max(1,Math.round(r.min*S.set.traffic));const d=rdist(a,b);return d===null?0:Math.max(1,Math.round(d*S.set.factor/S.set.speed*60))};
+const dur=t=>estT(t);
+const span=t=>({arr:t.dep+dur(t)*M});
+const seatsUsed=t=>new Set([...(t.driver?[t.driver]:[]),...t.riders]).size;
+function ivals(t){const arr=span(t).arr,m={},add=(p,s,e,k)=>{(m[p]=m[p]||[]).push([s,e,k])};
+ if(t.driver)add(t.driver,t.dep,arr,"driving");t.riders.forEach(p=>add(p,t.dep,arr,"riding"));
+ t.pack.forEach(p=>add(p,t.dep-t.packMin*M,t.dep,"packing"));t.unpack.forEach(p=>add(p,arr,arr+t.unpackMin*M,"unpacking"));return m}
+function problems(t){const out=[],v=by(S.cars,t.car),u=esc(S.set.unit),arr=span(t).arr;
+ if(!v)out.push("Car was removed.");if(!dur(t)&&!flexEnd(t)){const ms=[t.from,t.to].filter(i=>!geo(by(S.places,i))).map(pn);out.push(`Travel time can’t be calculated yet. Give ${ms.join(" and ")} an address and position.`)}
+ const mine=ivals(t);
+ S.trips.forEach(o=>{if(o.id===t.id)return;
+  if(o.car===t.car&&v&&t.dep<span(o).arr&&o.dep<arr)out.push(`${esc(v.name)} is also on ${rlabel(o)} at ${tm(o.dep)}.`);
+  const th=ivals(o);for(const p in mine){if(!th[p])continue;
+   for(const a of mine[p])for(const b of th[p])if(a[0]<b[1]&&b[0]<a[1]){out.push(`${esc(by(S.people,p)?.name||"?")} is ${a[2]} here but ${b[2]} on ${rlabel(o)} at ${tm(o.dep)}.`);return}}});
+ return[...new Set(out)]}
+const bar=(n,cap,txt)=>`<div class="bar"><i class="${n>cap?"over":""}" style="width:${Math.min(100,cap?n/cap*100:0)}%"></i></div><div class="mute">${txt}</div>`;
+function gmap(a,b){const q=p=>geo(p)?geo(p).lat+","+geo(p).lng:p.addr?encodeURIComponent(p.addr):"";const x=q(a),y=q(b);return x&&y?"https://www.google.com/maps/dir/?api=1&origin="+x+"&destination="+y+"&travelmode=driving":""}
+
+let V={z:12,cx:0,cy:0,init:false},lastFit="",animId=0,ROUTES_N=Object.keys(ROUTES).length,tilesOk=0,tilesErr=0,tileWarned=false,dragged=false,srcStart=0;const PEND={},FAIL={},TILES={},TS=256;
+const ESRI="https://server.arcgisonline.com/ArcGIS/rest/services/",ESA="Esri, HERE, Garmin, © OpenStreetMap contributors, and the GIS user community";
+const TILESRC={esri:[ESRI+"World_Street_Map/MapServer/tile/{z}/{y}/{x}",ESA],"esri-sat":[ESRI+"World_Imagery/MapServer/tile/{z}/{y}/{x}","Esri, Maxar, Earthstar Geographics, and the GIS user community"],osm:["https://tile.openstreetmap.org/{z}/{x}/{y}.png","© OpenStreetMap contributors"]};
+const curTile=()=>{const k=S.set.tileSrc||(location.protocol==="file:"?"esri":"osm");return k==="custom"&&S.set.tiles?[S.set.tiles,"Custom map tiles"]:(TILESRC[k]||TILESRC.esri)};
+const tileUrl=(i,z,x,y)=>i>0?null:curTile()[0].replace("{z}",z).replace("{x}",x).replace("{y}",y).replace("{s}","a");
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function pnode(pl){if(!pl||pl.hide)return null;if(ll(pl))return pl;const q=pl.parent&&by(S.places,pl.parent);return q&&!q.hide&&ll(q)?q:null}
+const rpts=(a,b)=>{const r=ROUTES[rkey(a,b)]||ROUTES[rkey(b,a)];return r?r.pts:[[a.lat,a.lng],[b.lat,b.lng]]};
+async function fetchRoute(a,b){const k=rkey(a,b);if(!k||ROUTES[k]||PEND[k]||(a.lat===b.lat&&a.lng===b.lng)||(FAIL[k]&&Date.now()-FAIL[k]<6e4))return;PEND[k]=1;
+ try{const r=await fetch(`https://router.project-osrm.org/route/v1/driving/${a.lng},${a.lat};${b.lng},${b.lat}?overview=full&geometries=geojson`),j=await r.json(),rt=j.routes&&j.routes[0];
+  if(rt){ROUTES[k]={min:rt.duration/60,km:rt.distance/1000,pts:rt.geometry.coordinates.map(c=>[+c[1].toFixed(5),+c[0].toFixed(5)])};try{localStorage.setItem(KEY+"-routes",JSON.stringify(ROUTES))}catch(e){}}else FAIL[k]=Date.now()}catch(e){FAIL[k]=Date.now()}
+ delete PEND[k]}
+function ensureRoutes(){const jobs=[];S.trips.forEach(t=>{const a=geo(by(S.places,t.from)),b=geo(by(S.places,t.to));if(a&&b)jobs.push(fetchRoute(a,b))});
+ if(jobs.length)Promise.all(jobs).then(()=>{const n=Object.keys(ROUTES).length;if(n!==ROUTES_N){ROUTES_N=n;render()}})}
+async function geocode(id){const p=by(S.places,id);if(!p)return;const par=p.parent?by(S.places,p.parent):null;let q=p.addr||(par&&par.addr?p.name+", "+par.addr:p.name);if(!/stockholm/i.test(q))q+=", Stockholm";
+ try{const r=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=se&q="+encodeURIComponent(q)),j=await r.json();
+  if(j[0]){p.lat=+(+j[0].lat).toFixed(5);p.lng=+(+j[0].lon).toFixed(5);save();render();toast(`Found ${p.name}: ${j[0].display_name.split(",").slice(0,3).join(",")}. Check the pin.`)}else toast("No match. Try a fuller address, or use Set on map.")}
+ catch(e){toast("Address lookup failed. Check your connection, or use Set on map.")}}
+const wp=(lat,lng,z)=>{const s=TS*2**z,sn=Math.sin(lat*Math.PI/180);return[(lng+180)/360*s,(.5-Math.log((1+sn)/(1-sn))/(4*Math.PI))*s]};
+const wl=(x,y,z)=>{const s=TS*2**z,n=Math.PI-2*Math.PI*y/s;return[180/Math.PI*Math.atan(.5*(Math.exp(n)-Math.exp(-n))),x/s*360-180]};
+function fitView(pts,w,h){let best=3;for(let z=16;z>=3;z--){const q=pts.map(a=>wp(a[0],a[1],z)),xs=q.map(a=>a[0]),ys=q.map(a=>a[1]);if(Math.max(...xs)-Math.min(...xs)<=w-120&&Math.max(...ys)-Math.min(...ys)<=h-120){best=z;break}}
+ best=Math.min(best,15);const q=pts.map(a=>wp(a[0],a[1],best)),xs=q.map(a=>a[0]),ys=q.map(a=>a[1]);V.z=best;V.cx=(Math.min(...xs)+Math.max(...xs))/2;V.cy=(Math.min(...ys)+Math.max(...ys))/2}
+function checkTiles(){if(!tileWarned&&tilesErr>6&&tilesOk===0){tileWarned=true;toast("Map tiles couldn’t load. Pins and routes still show on a plain grid. Check your connection.")}}
+function applyView(){const box=$("map"),w=box.clientWidth,h=box.clientHeight,ox=V.cx-w/2,oy=V.cy-h/2,z=V.z,n=2**z,tl=$("tiles"),keep=new Set();
+ const x0=Math.floor(ox/TS),x1=Math.floor((ox+w)/TS),y0=Math.max(0,Math.floor(oy/TS)),y1=Math.min(n-1,Math.floor((oy+h)/TS));
+ for(let x=x0;x<=x1;x++)for(let y=y0;y<=y1;y++){const k=`${z}/${x}/${y}`;keep.add(k);let im=TILES[k];
+  if(!im){im=new Image();im.alt="";im.draggable=false;im.style.opacity=0;const xm=((x%n)+n)%n;let si=srcStart;im.onload=()=>{tilesOk++;srcStart=Math.max(srcStart,si);im.style.opacity=1};im.onerror=()=>{si++;const u=tileUrl(si,z,xm,y);if(u)im.src=u;else{tilesErr++;checkTiles()}};im.src=tileUrl(si,z,xm,y);tl.appendChild(im);TILES[k]=im}
+  im.style.left=(x*TS-ox)+"px";im.style.top=(y*TS-oy)+"px"}
+ for(const k in TILES)if(!keep.has(k)){TILES[k].remove();delete TILES[k]}
+ const g=$("ovg");if(g)g.setAttribute("transform",`translate(${-ox} ${-oy})`)}
+function mapData(){const ts=dayTrips(curDay),used=new Set(),seen={},lines=[];let sel=null;
+ ts.forEach(t=>{const a=pnode(by(S.places,t.from)),b=pnode(by(S.places,t.to));if(a)used.add(a.id);if(b)used.add(b.id);if(!a||!b||(a.lat===b.lat&&a.lng===b.lng))return;
+  if(t.id===selId){sel={t,pts:rpts(a,b)};return}
+  const key=[a.id,b.id].sort().join();if(seen[key])return;seen[key]=1;lines.push({id:t.id,pts:rpts(a,b)})});
+ return{ts,used,lines,sel,nodes:S.places.filter(p=>ll(p)&&!p.hide)}}
+function buildOverlay(){cancelAnimationFrame(animId);const D=mapData(),z=V.z,rm=matchMedia("(prefers-reduced-motion: reduce)").matches,
+ P=pts=>"M"+pts.map(a=>{const q=wp(a[0],a[1],z);return q[0].toFixed(1)+","+q[1].toFixed(1)}).join("L");let h='<g id="ovg">';
+ D.lines.forEach(l=>{const d=P(l.pts);h+=`<path d="${d}" fill="none" stroke="#fff" stroke-width="6" opacity=".8" stroke-linecap="round"/><path d="${d}" fill="none" style="stroke:var(--ink)" stroke-width="3" stroke-dasharray="7 7"/><path d="${d}" fill="none" stroke="transparent" stroke-width="22" data-a="sel-trip" data-id="${l.id}" style="cursor:pointer;pointer-events:stroke"/>`});
+ if(D.sel){const t=D.sel.t,pp=D.sel.pts,d=P(pp),a=wp(pp[0][0],pp[0][1],z),b=wp(pp[pp.length-1][0],pp[pp.length-1][1],z),m=wp(pp[Math.floor(pp.length/2)][0],pp[Math.floor(pp.length/2)][1],z);
+  h+=`<path d="${d}" fill="none" stroke="#fff" stroke-width="12" opacity=".9" stroke-linecap="round" stroke-linejoin="round"/><path id="selpath" d="${d}" fill="none" style="stroke:${carColor(t.car)}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="pulse" cx="${a[0]}" cy="${a[1]}" r="9" style="fill:var(--acc)"/><circle class="pulse" cx="${b[0]}" cy="${b[1]}" r="9" style="fill:var(--acc)"/>${rm?"":`<circle id="dot" cx="${a[0]}" cy="${a[1]}" r="7" style="fill:var(--surf);stroke:var(--acc)" stroke-width="3"/>`}
+  <text x="${m[0]}" y="${m[1]-12}" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--ink);stroke:var(--surf);stroke-width:5px;paint-order:stroke">${tm(t.dep)}, ${dur(t)} min</text>`}
+ D.nodes.forEach(p=>{const q=wp(p.lat,p.lng,z),on=D.used.has(p.id),subs=S.places.filter(c=>c.parent===p.id&&!ll(c)).map(c=>c.name).join(", ");
+  h+=`<circle cx="${q[0]}" cy="${q[1]}" r="${on?8:5}" style="fill:${on?"var(--acc)":"var(--mute)"};stroke:#fff" stroke-width="2"/><text x="${q[0]+12}" y="${q[1]+4}" font-size="13" font-weight="700" style="fill:#111;stroke:#fff;stroke-width:4px;paint-order:stroke">${esc(p.name)}</text>${subs?`<text x="${q[0]+12}" y="${q[1]+19}" font-size="11" style="fill:#444;stroke:#fff;stroke-width:4px;paint-order:stroke">${esc(subs)}</text>`:""}`});
+ $("ov").innerHTML=h+"</g>";
+ const sp=$("selpath");if(sp&&!rm&&sp.getTotalLength){const len=sp.getTotalLength(),dot=$("dot");sp.style.strokeDasharray=len;sp.style.strokeDashoffset=len;void sp.getBoundingClientRect();sp.style.transition="stroke-dashoffset .9s ease";sp.style.strokeDashoffset=0;
+  const t0=performance.now(),step=now=>{const pt=sp.getPointAtLength(((now-t0)%2800)/2800*len);dot.setAttribute("cx",pt.x);dot.setAttribute("cy",pt.y);animId=requestAnimationFrame(step)};animId=requestAnimationFrame(step)}}
+function zoomBy(dz,px,py){const r=$("map").getBoundingClientRect(),mx=px!=null?px-r.left:r.width/2,my=py!=null?py-r.top:r.height/2,nz=Math.max(3,Math.min(18,V.z+dz));if(nz===V.z)return;
+ const g=wl(V.cx-r.width/2+mx,V.cy-r.height/2+my,V.z),q=wp(g[0],g[1],nz);V.z=nz;V.cx=q[0]-mx+r.width/2;V.cy=q[1]-my+r.height/2;buildOverlay();applyView()}
+function drawMap(){const box=$("map"),w=box.clientWidth,h=box.clientHeight;if(!w)return;box.classList.toggle("pick",!!pick);const D=mapData(),fk=curDay+"|"+selId;
+ if(!V.init||fk!==lastFit){lastFit=fk;V.init=true;const up=[...D.used].map(i=>by(S.places,i)).filter(x=>x&&ll(x)).map(x=>[x.lat,x.lng]),all=D.sel?D.sel.pts:(up.length?up:D.nodes.map(x=>[x.lat,x.lng]));
+  if(all.length)fitView(all,w,h);else{V.z=12;const q=wp(59.334,18.063,12);V.cx=q[0];V.cy=q[1]}}
+ buildOverlay();applyView();$("attr").textContent=curTile()[1];
+ const miss=S.places.filter(x=>!x.parent&&!x.hide&&!x.flex&&!ll(x));
+ $("mapovl").innerHTML=pick?`<div class="ovl top">Tap the map to place <b>${pn(pick)}</b>. <button class="g" data-a="cancel-pick">Cancel</button></div>`:`<div class="hint">${D.nodes.length?"Dashed lines are this day’s routes. Tap a trip or a line to highlight it.":"No places on the map yet. Open Setup and use Find address."}</div>`;
+ $("mapmsg").innerHTML=miss.length?`<div class="warn" style="margin:-4px 0 12px">Not on the map yet: ${miss.map(x=>esc(x.name)).join(", ")}.${EDIT?" Open Setup, then use Find address or Set on map.":""}</div>`:""}
+(function(){const box=$("map"),ptr={};let drag=null,pinch=0,lw=0;const d2=()=>{const k=Object.keys(ptr);return Math.hypot(ptr[k[0]][0]-ptr[k[1]][0],ptr[k[0]][1]-ptr[k[1]][1])};
+ box.addEventListener("pointerdown",e=>{ptr[e.pointerId]=[e.clientX,e.clientY];const n=Object.keys(ptr).length;if(n===1)drag={x:e.clientX,y:e.clientY,cx:V.cx,cy:V.cy,m:false};else if(n===2){pinch=d2();drag=null}});
+ window.addEventListener("pointermove",e=>{if(!ptr[e.pointerId])return;ptr[e.pointerId]=[e.clientX,e.clientY];
+  if(Object.keys(ptr).length===2){const d=d2();if(pinch&&d/pinch>1.6){zoomBy(1);pinch=d;dragged=true}else if(pinch&&d/pinch<.62){zoomBy(-1);pinch=d;dragged=true}return}
+  if(drag){const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>5)drag.m=true;if(drag.m){dragged=true;V.cx=drag.cx-dx;V.cy=drag.cy-dy;applyView()}}});
+ const up=e=>{delete ptr[e.pointerId];if(Object.keys(ptr).length<2)pinch=0;if(!Object.keys(ptr).length)drag=null;setTimeout(()=>dragged=false,0)};
+ window.addEventListener("pointerup",up);window.addEventListener("pointercancel",up);
+ box.addEventListener("wheel",e=>{e.preventDefault();if(Date.now()-lw<200)return;lw=Date.now();zoomBy(e.deltaY<0?1:-1,e.clientX,e.clientY)},{passive:false});
+ box.addEventListener("click",e=>{if(dragged){e.stopPropagation();e.preventDefault()}},true);
+ box.addEventListener("click",e=>{if(!pick)return;const p=by(S.places,pick);if(!p)return;const r=box.getBoundingClientRect(),g=wl(V.cx-r.width/2+e.clientX-r.left,V.cy-r.height/2+e.clientY-r.top,V.z);
+  p.lat=+g[0].toFixed(5);p.lng=+g[1].toFixed(5);pick="";setupOpen=true;save();render();toast(`${p.name} placed.`)});
+ window.addEventListener("resize",()=>applyView())})();
+
+function selPanelRO(t){const v=by(S.cars,t.car),gl=gmap(by(S.places,t.from),by(S.places,t.to));
+ return`<div class="card" style="border-color:${carColor(t.car)}"><b><i class="cd" style="background:${carColor(t.car)}"></i>${v?esc(v.name):""}: ${tm(t.dep)} to ${tm(span(t).arr)}, ${rlabel(t)}</b>${t.note?`<div class="mute">${esc(t.note)}</div>`:""}
+ ${flexNote(t)}<div style="margin-top:6px"><b>Driver</b> ${t.driver?names([t.driver]):'<span class="mute">not assigned yet</span>'}</div><div><b>Stand-in (sober backup)</b> ${t.standin?names([t.standin]):'<span class="mute">not assigned yet</span>'}</div><div><b>Packing</b> ${names(t.pack)} <b>Unpacking</b> ${names(t.unpack)}</div>${problems(t).map(x=>`<div class="warn">${x}</div>`).join("")}
+ <div class="row" style="margin-top:10px">${gl?`<a class="g" href="${gl}" target="_blank" rel="noopener">Open in Google Maps</a>`:""}<button class="g" data-a="sel-trip" data-id="${t.id}">Close</button></div></div>`}
+function openSlots(t){const o=[];if(!t.driver)o.push("driver");const pk=S.set.packSlots-t.pack.length,up=S.set.unpackSlots-t.unpack.length;if(pk>0)o.push(pk+" packer"+(pk>1?"s":""));if(up>0)o.push(up+" unpacker"+(up>1?"s":""));return o}
+function openPills(t){const o=openSlots(t);return o.length?`<span class="mute">Open: ${o.join(", ")}</span>`:'<span class="mute">Crew complete</span>'}
+function selPanel(t){const v=by(S.cars,t.car),u=esc(S.set.unit),pr=problems(t),gl=gmap(by(S.places,t.from),by(S.places,t.to));
+ const chips=(f,arr)=>`<div class="chips">${S.people.map(p=>`<button type="button" class="chip ${arr.includes(p.id)?"on":""}" data-a="qtog" data-f="${f}" data-id="${p.id}">${esc(p.name)}</button>`).join("")||'<span class="mute">Add people in Setup, or let them sign up in the Google Sheet.</span>'}</div>`;
+ return`<div class="card" style="border-color:${carColor(t.car)}"><div class="row" style="justify-content:space-between"><b><i class="cd" style="background:${carColor(t.car)}"></i>${tm(t.dep)} to ${tm(span(t).arr)}, ${rlabel(t)}</b><span>${openPills(t)}</span></div>${t.note?`<div class="mute">${esc(t.note)}</div>`:""}${flexNote(t)}
+ <div class="row"><div class="grow"><label>Car</label><select data-q="car">${S.cars.map(c=>`<option value="${c.id}" ${c.id===t.car?"selected":""}>${esc(c.name)}</option>`).join("")}</select></div><div class="grow"><label>Driver</label><select data-q="driver"><option value="">Not assigned yet</option>${S.people.map(p=>`<option value="${p.id}" ${p.id===t.driver?"selected":""}>${esc(p.name)}</option>`).join("")}</select></div></div>
+ 
+ <label>Stand-in (sober backup, same for the whole run)</label><select data-q="standin"><option value="">Not assigned yet</option>${S.people.map(p=>`<option value="${p.id}" ${p.id===t.standin?"selected":""}>${esc(p.name)}</option>`).join("")}</select>
+ <label>Packing crew at ${pn(t.from)}</label>${chips("pack",t.pack)}<label>Unpacking crew at ${pn(t.to)}</label>${chips("unpack",t.unpack)}
+ ${S.set.sheet?'<div class="mute" style="margin-top:8px">A Google Sheet is connected, so the next sync replaces drivers set here. Ask people to sign up for driving in the sheet.</div>':""}${pr.map(x=>`<div class="warn">${x}</div>`).join("")}
+ <div class="row" style="margin-top:10px"><button class="p" data-a="edit-trip" data-id="${t.id}">Edit run (time and route)</button><button class="g" data-a="dup-trip" data-id="${t.id}">Duplicate run</button><button class="g ${armed==="t"+t.id?"danger":""}" data-a="del-trip" data-id="${t.id}">${armed==="t"+t.id?"Tap again to confirm":"Remove this car"}</button>${gl?`<a class="g" href="${gl}" target="_blank" rel="noopener">Open in Google Maps</a>`:""}<button class="g" data-a="sel-trip" data-id="${t.id}">Close</button></div></div>`}
+const plain=id=>{const p=by(S.places,id);return p?p.name:"?"};
+const WD=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],MO=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const standinTxt=g=>{const s=g.find(x=>x.standin&&by(S.people,x.standin));return s?` <span class="mute">Stand-in: ${esc(by(S.people,s.standin).name)}</span>`:""};
+const hm=ms=>{const d=new Date(ms);return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")};
+const dtxt=ms=>{const d=new Date(ms);return`${WD[d.getDay()]} ${d.getDate()} ${MO[d.getMonth()]}`};
+const wdOf=i=>WD[new Date(dayStart(i)).getDay()];
+const tabOf=i=>i<=1&&S.set.days>1?`${wdOf(0)}-${wdOf(1)}`:wdOf(i);
+function runsOf(ts){const m=new Map();ts.forEach(t=>{const k=`${t.dep}|${t.from}|${t.to}`;if(!m.has(k))m.set(k,[]);m.get(k).push(t)});const ci=t=>S.cars.findIndex(c=>c.id===t.car);return[...m.values()].map(g=>g.sort((a,b)=>ci(a)-ci(b)))}
+function runsHTML(ts){const u=esc(S.set.unit);return`<div class="card"><div class="row" style="justify-content:space-between"><b>Trips by run</b><button class="g eo" data-a="add-park-day">Add end-of-day parking</button></div><div class="mute">Cars leaving together on the same route are grouped.</div>${runsOf(ts).map(g=>{const t0=g[0];return`<div class="run"><div class="rh row" style="justify-content:space-between"><span><b>${tm(t0.dep)} to ${tm(span(t0).arr)}</b> ${rlabel(t0)}${standinTxt(g)}${t0.arrAt?` <span class="mute">Arrives by ${tm(t0.arrAt)}</span>`:""}</span><span class="row eo"><button class="g" data-a="edit-trip" data-id="${t0.id}">Edit run</button>${S.cars.filter(c=>!g.some(t=>t.car===c.id)).map(c=>`<button class="g" data-a="add-car-run" data-id="${t0.id}" data-car="${c.id}">+ ${esc(c.name)}</button>`).join("")}<button class="g ${armed==="r"+t0.id?"danger":""}" data-a="del-run" data-id="${t0.id}">${armed==="r"+t0.id?"Tap again to confirm":"Delete run"}</button></span></div>${[...new Set(g.map(t=>t.note).filter(Boolean))].map(n=>`<div class="mute">${esc(n)}</div>`).join("")}${flexNote(t0)}${g.map(t=>{const v=by(S.cars,t.car),bad=problems(t).length>0;return`<button class="tr ${bad?"bad":""} ${t.id===selId?"sel":""}" ${bad?"":`style="border-left-color:${carColor(t.car)}"`} data-a="sel-trip" data-id="${t.id}"><div class="row" style="justify-content:space-between"><span><i class="cd" style="background:${carColor(t.car)}"></i><b>${v?esc(v.name):"No car"}</b>: ${esc(who(t))}</span>${openPills(t)}</div></button>`}).join("")}</div>`}).join("")||'<div class="mute" style="padding:10px 0">Nothing planned. Use Add trip.</div>'}</div>`}
+function sheetRows(){const rows={};for(let i=0;i<S.set.days;i++){const tab=tabOf(i);(rows[tab]=rows[tab]||[]);runsOf(dayTrips(i)).forEach(g=>{const t0=g[0];rows[tab].push([wdOf(i),dtxt(t0.dep),hm(t0.dep),plain(t0.from),plain(t0.to),...S.cars.map(c=>{const t=g.find(x=>x.car===c.id);return t&&t.driver?(by(S.people,t.driver)?.name||""):""}),(()=>{const s=g.find(x=>x.standin);return s?(by(S.people,s.standin)?.name||""):""})(),[...new Set(g.map(t=>t.note).filter(Boolean))].join("; ")])})}return rows}
+function exportCsv(){const rows=sheetRows(),all=[["Day","Date","Time","From","To",...S.cars.map(c=>c.name+" driver"),"Stand-in (sober backup)","Notes"]];Object.keys(rows).forEach(k=>rows[k].forEach(r=>all.push(r)));
+ const csv="\ufeff"+all.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(",")).join("\r\n"),a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="transport-drivers.csv";document.body.appendChild(a);a.click();a.remove()}
+function csvBase(u){const m=String(u||"").match(/\/spreadsheets\/d\/([\w-]+)/);if(!m||/\/d\/e\//.test(u))return null;return tab=>`https://docs.google.com/spreadsheets/d/${m[1]}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`}
+function csvParse(s){const rows=[];let r=[],c="",q=false;for(let i=0;i<s.length;i++){const ch=s[i];if(q){if(ch==='"'){if(s[i+1]==='"'){c+='"';i++}else q=false}else c+=ch}else if(ch==='"')q=true;else if(ch===","){r.push(c);c=""}else if(ch==="\n"||ch==="\r"){if(ch==="\r"&&s[i+1]==="\n")i++;r.push(c);c="";rows.push(r);r=[]}else c+=ch}if(c||r.length){r.push(c);rows.push(r)}return rows}
+const normDay=s=>{s=String(s||"").trim();const i=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(i)return+i[3];const n=s.match(/\b(\d{1,2})\b/);return n?+n[1]:0};
+const normTime=s=>{const m=String(s||"").match(/(\d{1,2}):(\d{2})(?::\d{2})?\s*(am|pm)?/i);if(!m)return"";let h=+m[1];const a=(m[3]||"").toLowerCase();if(a==="pm"&&h<12)h+=12;if(a==="am"&&h===12)h=0;return String(h).padStart(2,"0")+":"+m[2]};
+function getTab(tab){return new Promise((res,rej)=>{const mm=String(S.set.sheet).match(/\/spreadsheets\/d\/([\w-]+)/);if(!mm)return rej(0);
+ const base=`https://docs.google.com/spreadsheets/d/${mm[1]}/gviz/tq?headers=1&sheet=${encodeURIComponent(tab)}`,cb="__gv"+Math.random().toString(36).slice(2);
+ const viaCsv=()=>fetch(base+"&tqx=out:csv").then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>res(csvParse(t))).catch(rej);
+ let done=false;const s=document.createElement("script"),clean=()=>{s.remove();delete window[cb]};
+ window[cb]=o=>{done=true;clean();if(!o||o.status==="error"||!o.table)return viaCsv();const rows=[o.table.cols.map(c=>c.label||"")];o.table.rows.forEach(r=>rows.push(r.c.map(c=>c?(c.f!=null&&c.f!==""?c.f:(c.v==null?"":c.v)):"")));res(rows.map(r=>r.map(String)))};
+ s.onerror=()=>{if(!done){clean();viaCsv()}};s.onload=()=>setTimeout(()=>{if(!done){clean();viaCsv()}},50);
+ s.src=base+`&tqx=out:json;responseHandler:${cb}`;document.head.appendChild(s)})}
+async function syncSheet(manual){const base=csvBase(S.set.sheet);if(!base){if(manual)toast("Paste your Google Sheet link in Setup first.");return}
+ try{const tabs=[...new Set(Array.from({length:S.set.days},(_,i)=>tabOf(i)))],idx=new Map(),idx2=new Map();let n=0,miss=0;
+  S.trips.forEach(t=>{const k=[new Date(t.dep).getDate(),hm(t.dep),plain(t.from).toLowerCase(),plain(t.to).toLowerCase(),t.car].join("|"),k2=[new Date(t.dep).getDate(),plain(t.from).toLowerCase(),plain(t.to).toLowerCase(),t.car].join("|");idx.set(k,t);idx2.set(k2,(idx2.get(k2)||[]).concat(t))});
+  const pid=nm=>{let p=S.people.find(x=>x.name.toLowerCase()===nm.toLowerCase());if(!p){p={id:uid(),name:nm};S.people.push(p)}return p.id};
+  for(const tab of tabs){const rows=await getTab(tab),hi=rows.findIndex(r=>["date","time","from","to"].every(k=>r.some(z=>String(z).trim().toLowerCase()===k)));if(hi<0)throw 1;
+   const h=rows[hi].map(x=>String(x).trim().toLowerCase()),di=h.indexOf("date"),ti=h.indexOf("time"),fi=h.indexOf("from"),to=h.indexOf("to"),si=h.findIndex(z=>z.startsWith("stand-in"));
+   rows.slice(hi+1).forEach(x=>{const dm=normDay(x[di]),tt=normTime(x[ti]);if(!dm||!tt)return;const hit=[];S.cars.forEach(c=>{const col=h.findIndex(z=>z.startsWith(c.name.toLowerCase()));if(col<0)return;const nm=(x[col]||"").trim(),fl=(x[fi]||"").trim().toLowerCase(),tl=(x[to]||"").trim().toLowerCase(),t=idx.get([dm,tt,fl,tl,c.id].join("|"))||(a=>a&&a.length===1?a[0]:null)(idx2.get([dm,fl,tl,c.id].join("|")));if(!t){if(nm)miss++;return}t.driver=nm?pid(nm):"";n++;hit.push(t)});if(si>=0){const sn=(x[si]||"").trim();hit.forEach(t=>t.standin=sn?pid(sn):"")}})}
+  try{const pr=await getTab("People"),pi=pr.findIndex(r=>/^name$/i.test(String(r[0]||"").trim()));if(pi>=0)pr.slice(pi+1).forEach(x=>{const nm=String(x[0]||"").trim();if(nm)pid(nm)})}catch(e){}
+  S.set.lastSync=Date.now();save();render();if(manual)toast(`Synced ${n} driver slots.${miss?` ${miss} names didn’t match a trip.`:""}`)}
+ catch(e){if(manual)toast("Couldn’t read the sheet. Check that sharing is set to Anyone with the link, and that the tabs are named Thu-Fri, Sat and Sun with the header row Date, Time, From, To.")}}
+const sheetHdr=()=>["Day","Date","Time","From","To",...S.cars.map(c=>c.name+" driver"),"Stand-in (sober backup)","Notes"];
+function sheetModel(){const m={};for(let i=0;i<S.set.days;i++){const tab=tabOf(i);(m[tab]=m[tab]||[]);runsOf(dayTrips(i)).forEach(g=>{const t0=g[0];
+ m[tab].push({row:[wdOf(i),dtxt(t0.dep),hm(t0.dep),plain(t0.from),plain(t0.to),...S.cars.map(c=>{const t=g.find(x=>x.car===c.id);return t&&t.driver?(by(S.people,t.driver)?.name||""):""}),(()=>{const s=g.find(x=>x.standin);return s?(by(S.people,s.standin)?.name||""):""})(),[...new Set(g.map(t=>t.note).filter(Boolean))].join("; ")],pres:S.cars.map(c=>g.some(x=>x.car===c.id))})})}return m}
+function legacyCopy(t){const a=document.createElement("textarea");a.value=t;a.style.cssText="position:fixed;left:-999px;top:0";document.body.appendChild(a);a.select();let ok=false;try{ok=document.execCommand("copy")}catch(e){}a.remove();return ok}
+function copyTab(tab){const rows=(sheetModel()[tab]||[]).map(o=>o.row),tsv=[sheetHdr(),...rows].map(r=>r.map(c=>{c=String(c).replace(/[\t\r\n]+/g," ");return /"/.test(c)?`"${c.replace(/"/g,'""')}"`:c}).join("\t")).join("\n");
+ const ok=()=>toast(`Copied ${rows.length} rows for ${tab}. Open the ${tab} tab in your sheet, click A1 and paste.`),manual=()=>{const a=$("copyarea");if(a){a.hidden=false;a.value=tsv;a.focus();a.select()}toast("Couldn’t copy automatically. Select the text in the box and copy it.")};
+ const fb=()=>legacyCopy(tsv)?ok():manual();
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(tsv).then(ok).catch(fb);else fb()}
+function crc32(b){const t=crc32.t||(crc32.t=Array.from({length:256},(_,n)=>{let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;return c>>>0}));let r=-1;for(let i=0;i<b.length;i++)r=t[(r^b[i])&255]^(r>>>8);return(r^-1)>>>0}
+function zipStore(files){const enc=new TextEncoder(),parts=[],cd=[];let off=0;
+ files.forEach(([name,txt])=>{const nb=enc.encode(name),db=enc.encode(txt),crc=crc32(db),h=new DataView(new ArrayBuffer(30));
+  h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(12,0x21,true);h.setUint32(14,crc,true);h.setUint32(18,db.length,true);h.setUint32(22,db.length,true);h.setUint16(26,nb.length,true);
+  parts.push(new Uint8Array(h.buffer),nb,db);
+  const c=new DataView(new ArrayBuffer(46));c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint16(8,0x0800,true);c.setUint16(14,0x21,true);c.setUint32(16,crc,true);c.setUint32(20,db.length,true);c.setUint32(24,db.length,true);c.setUint16(28,nb.length,true);c.setUint32(42,off,true);
+  cd.push(new Uint8Array(c.buffer),nb);off+=30+nb.length+db.length});
+ const csz=cd.reduce((a,x)=>a+x.length,0),e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,csz,true);e.setUint32(16,off,true);
+ return new Blob([...parts,...cd,new Uint8Array(e.buffer)],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"})}
+function buildXlsx(){const model=sheetModel(),tabs=Object.keys(model),nc=S.cars.length,hdr=sheetHdr(),NS='xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"',HD='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+ const L=i=>{let s="";i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26)}return s},xe=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+ const cell=(r,c,v,s)=>{const ref=L(c)+r;return v===""||v==null?`<c r="${ref}" s="${s}"/>`:`<c r="${ref}" s="${s}" t="inlineStr"><is><t xml:space="preserve">${xe(v)}</t></is></c>`};
+ const help=["Pick your name from the dropdown in the yellow cell of a car you will drive. Grey means that car is not on that run.","The blue Stand-in cell is the sober backup driver for the whole run.","Leave Date, Time, From and To unchanged: the planner app matches on them.","Each tab is one event day. To remove yourself, clear your cell."],hc=hdr.length+1;
+ const widths=[7,13,8,26,26,...S.cars.map(()=>18),24,44,3,80],cols=widths.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join("");
+ const sheets=tabs.map(tab=>{const rows=model[tab];let sd=`<row r="1">${hdr.map((h,c)=>cell(1,c,h,1)).join("")}${cell(1,hc,"How to use",0)}</row>`;
+  for(let i=0;i<Math.max(rows.length,help.length);i++){const r=i+2,o=rows[i];sd+=`<row r="${r}">${o?o.row.map((v,c)=>cell(r,c,v,c>=5&&c<5+nc?(o.pres[c-5]?2:4):c===5+nc?3:0)).join(""):""}${help[i]?cell(r,hc,help[i],0):""}</row>`}
+  return`${HD}<worksheet ${NS}><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${cols}</cols><sheetData>${sd}</sheetData><dataValidations count="1"><dataValidation type="list" allowBlank="1" showErrorMessage="1" errorTitle="Pick a name" error="Choose a name from the People tab." sqref="${L(5)}2:${L(5+nc)}60"><formula1>People!$A$2:$A$30</formula1></dataValidation></dataValidations></worksheet>`});
+ sheets.push(`${HD}<worksheet ${NS}><cols><col min="1" max="1" width="22" customWidth="1"/></cols><sheetData><row r="1">${cell(1,0,"Name",1)}</row>${S.people.map((p,i)=>`<row r="${i+2}">${cell(i+2,0,p.name,0)}</row>`).join("")}</sheetData></worksheet>`);
+ const names=[...tabs,"People"],fill=c=>`<fill><patternFill patternType="solid"><fgColor rgb="FF${c}"/><bgColor indexed="64"/></patternFill></fill>`,xf=(f,fi)=>`<xf numFmtId="0" fontId="${f}" fillId="${fi}" borderId="0" xfId="0" applyFont="1" applyFill="1"/>`;
+ const styles=`${HD}<styleSheet ${NS}><fonts count="2"><font><sz val="11"/><name val="Arial"/></font><font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Arial"/></font></fonts><fills count="6"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill>${fill("0F6B5C")}${fill("FFF4B8")}${fill("D8ECFF")}${fill("E4E4E4")}</fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="5">${xf(0,0)}${xf(1,2)}${xf(0,3)}${xf(0,4)}${xf(0,5)}</cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
+ const files=[["[Content_Types].xml",`${HD}<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>${names.map((_,i)=>`<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("")}</Types>`],
+ ["_rels/.rels",`${HD}<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`],
+ ["xl/workbook.xml",`${HD}<workbook ${NS} xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>${names.map((n,i)=>`<sheet name="${xe(n)}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join("")}</sheets></workbook>`],
+ ["xl/_rels/workbook.xml.rels",`${HD}<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${names.map((_,i)=>`<Relationship Id="rId${i+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join("")}<Relationship Id="rId${names.length+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`],
+ ["xl/styles.xml",styles],...sheets.map((x,i)=>[`xl/worksheets/sheet${i+1}.xml`,x])];
+ return zipStore(files)}
+function exportXlsx(){const a=document.createElement("a");a.href=URL.createObjectURL(buildXlsx());a.download="transport-driver-sheet.xlsx";document.body.appendChild(a);a.click();a.remove()}
+function exportPlan(){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:"application/json"}));a.download="plan.json";document.body.appendChild(a);a.click();a.remove()}
+function fixSet(){S.set=S.set||{};S.trips.forEach(t=>{delete t.park});delete S.set.parkOff;S.set.traffic=S.set.traffic||1.25;S.set.packSlots=S.set.packSlots??2;S.set.unpackSlots=S.set.unpackSlots??2;S.set.sheet=S.set.sheet||"";S.set.parkWait=S.set.parkWait??30;S.notes=S.notes||[]}
+function publishHTML(){return`<div class="mute" style="margin:8px 0">Everyone who opens the hosted page sees your published plan read-only. Their edits can’t reach you or anyone else, because each browser keeps its own copy. To publish: 1) download plan.json, 2) commit it to your GitHub repository next to index.html, 3) the page picks it up on the next load. Only people with write access to the repository can change what visitors see. Open the page with ?edit at the end of the address to edit it yourself.</div>
+ <div class="row"><button class="p" data-a="export-plan">Download plan.json</button></div><label>Load a plan.json (to continue editing on another device)</label><input type="file" accept=".json,application/json" id="plan-file">
+ <div class="mute" style="margin-top:6px">The Google Sheet link is part of plan.json, so visitors can see it. Drivers sign up in the sheet, so protect its other columns in Google Sheets.</div>`}
+function sheetHTML(){return`<div class="mute" style="margin:8px 0">Volunteers put their name in a car’s driver cell in a Google Sheet, and this app reads it. The sheet needs one tab per day (Thu-Fri, Sat, Sun) with the columns Date, Time, From, To one “driver” column per car and a “Stand-in (sober backup)” column. Share it so volunteers can edit, and set General access to Anyone with the link so the app can read it.</div>
+ <b style="display:block;margin-top:12px">After you change the plan</b><div class="mute" style="margin:4px 0 8px">Copy a day’s rows, open that tab in your Google Sheet, click A1 and paste. If there are now fewer runs, clear the old rows underneath first. Or download a ready-made Excel file with the dropdowns and upload it as a new sheet.</div>
+ <div class="row">${Object.keys(sheetModel()).map(k=>`<button class="g" data-a="copy-tab" data-tab="${k}">Copy ${k}</button>`).join("")}<button class="g" data-a="export-xlsx">Download Excel (.xlsx)</button></div><textarea id="copyarea" hidden readonly rows="6" style="width:100%;margin-top:8px;font:12px monospace"></textarea>
+ <label>Google Sheet link</label><input id="s-sheet" value="${esc(S.set.sheet||"")}" placeholder="https://docs.google.com/spreadsheets/d/…">
+ <div class="row" style="margin-top:10px"><button class="p" data-a="sync-sheet">Sync now</button><button class="g" data-a="export-csv">Download current drivers (CSV)</button></div>
+ <div class="mute" style="margin-top:6px">${S.set.lastSync?"Last synced "+tm(S.set.lastSync)+". ":"Not synced yet. "}Auto-sync every 2 minutes. The sheet replaces the drivers set in the app.</div>`}
+function gantt(rows,d0,d1){
+ const all=rows.flatMap(r=>r.blocks).filter(b=>b.s>=d0&&b.s<d1);
+ if(!all.length)return'<div class="mute" style="padding:8px 0">No trips on this day yet.</div>';
+ const lo=Math.floor(Math.min(...all.map(b=>b.s))/H)*H;let hi=Math.ceil(Math.max(...all.map(b=>b.e))/H)*H;if(hi-lo<3*H)hi=lo+3*H;
+ const n=(hi-lo)/H,pc=t=>Math.min(100,Math.max(0,(t-lo)/(hi-lo)*100));
+ return`<div class="gt"><div style="--n:${n}"><div class="g2"><div></div><div class="axis">${Array.from({length:n},(_,i)=>`<span style="left:${i/n*100}%">${tm(lo+i*H)}</span>`).join("")}</div></div>`+
+ rows.map(r=>`<div class="g2"><div class="lbl">${r.label}</div><div class="track">${r.blocks.filter(b=>b.s>=d0&&b.s<d1).map(b=>`<button class="blk k-${b.kind}${b.bad?" bad":""}${b.id===selId?" sel":""}" style="left:${pc(b.s)}%;width:${Math.max(6,pc(b.e)-pc(b.s))}%${b.color?";--bk:"+b.color:""}" data-a="sel-trip" data-id="${b.id}" title="${b.title}">${b.text}</button>`).join("")}</div></div>`).join("")+"</div></div>"}
+
+function appHTML(){
+ const ts=dayTrips(curDay),d0=dayStart(curDay),d1=dayStart(curDay+1),u=esc(S.set.unit),all=[...S.trips].sort((a,b)=>a.dep-b.dep);
+ const rows=rowMode==="cars"?S.cars.map(v=>({label:`<b><i class="cd" style="background:${carColor(v.id)}"></i>${esc(v.name)}</b>`,blocks:all.filter(t=>t.car===v.id).map(t=>({s:t.dep,e:span(t).arr,kind:"drive",color:carColor(v.id),id:t.id,bad:problems(t).length>0,text:`${esc(who(t))}: ${rlabel(t)}`,title:`${tm(t.dep)} ${esc(who(t))}: ${rlabel(t)}`}))})):
+ S.people.map(p=>({label:`<b>${esc(p.name)}</b>`,blocks:all.flatMap(t=>{const bad=problems(t).length>0;return(ivals(t)[p.id]||[]).map(([s,e,k])=>({s,e,id:t.id,bad,kind:{driving:"drive",riding:"ride",packing:"pack",unpacking:"unpack"}[k],text:{driving:"Drive",riding:"Ride",packing:"Pack",unpacking:"Unpack"}[k],title:`${k} ${rlabel(t)}`}))})}));
+ const iss=ts.flatMap(t=>problems(t).map(x=>({t,x}))),nod=ts.filter(t=>!t.driver).length;
+ const leg=rowMode==="people"?'<div class="leg">'+[["drive","Drive"],["ride","Ride"],["pack","Pack"],["unpack","Unpack"]].map(([k,l])=>`<span class="k-${k}"><i></i>${l}</span>`).join("")+"</div>":"";
+ const notes=S.notes.filter(n=>dayIdx(n.at)===curDay).sort((a,b)=>a.at-b.at);
+ return`<div class="row" style="margin:6px 0 10px"><span class="kp">${ts.length} trip${ts.length===1?"":"s"}</span>${nod?`<span class="kp">${nod} without driver</span>`:""}<span class="kp ${iss.length?"bad":""}">${iss.length?iss.length+" issue"+(iss.length>1?"s":""):"No issues"}</span></div>
+ ${selId&&by(S.trips,selId)?(EDIT?selPanel:selPanelRO)(by(S.trips,selId)):""}
+ ${notes.length||EDIT?`<div class="card"><div class="row" style="justify-content:space-between"><b>Plan for the day</b><button class="g eo" data-a="edit-notes">${notes.length?"Edit notes":"Add a note"}</button></div>${notes.length?"":'<div class="mute">No notes for this day yet.</div>'}${notes.map(n=>`<div class="note"><b>${tm(n.at)}</b><span>${esc(n.text)}${n.place&&by(S.places,n.place)?` <span class="mute">(${pn(n.place)})</span>`:""}</span></div>`).join("")}</div>`:""}
+ <div class="card"><div class="row" style="justify-content:space-between"><b>Timeline</b><div class="row"><button class="g ${rowMode==="cars"?"on":""}" data-a="rows" data-m="cars">Cars</button><button class="g ${rowMode==="people"?"on":""}" data-a="rows" data-m="people">People</button></div></div>${leg}${rowMode==="people"&&!S.people.length?'<div class="mute" style="padding:8px 0">Add people in Setup, then assign them to trips.</div>':gantt(rows,d0,d1)}</div>
+ ${iss.length?`<div class="card"><b>Issues</b>${iss.map(i=>`<button class="warn iss" data-a="sel-trip" data-id="${i.t.id}">${tm(i.t.dep)}, ${rlabel(i.t)}: ${i.x}</button>`).join("")}</div>`:""}
+ ${runsHTML(ts)}`}
+
+function applyArrivals(){S.trips.forEach(t=>{if(t.arrAt)t.dep=t.arrAt-dur(t)*M})}
+const mkTrip=(car,d)=>({id:uid(),car,from:d.from,to:d.to,dep:d.mode==="arr"?d.arrAt-estT(d)*M:d.dep,arrAt:d.mode==="arr"?d.arrAt:undefined,min:d.min,driver:"",riders:[],pack:[],unpack:[],packMin:d.packMin,unpackMin:d.unpackMin,load:0,note:d.note});
+const runIdsOf=t=>S.trips.filter(x=>x.dep===t.dep&&x.from===t.from&&x.to===t.to).map(x=>x.id);
+function form(){const d=draft,est=estT(d),ga=geo(by(S.places,d.from)),gb=geo(by(S.places,d.to)),rk=ga&&gb?rkey(ga,gb):null;if(rk&&!ROUTES[rk]&&!PEND[rk])fetchRoute(ga,gb).then(()=>{if(draft&&ROUTES[rk])render()});const cn=(d.isNew?S.cars.map(c=>c.name):d.runIds.map(i=>by(S.cars,(by(S.trips,i)||{}).car)?.name||"?")).map(esc).join(", ");
+ return`<div class="ov" data-a="bg"><div class="sbox" role="dialog" aria-label="Run"><b>${d.isNew?"New run":"Edit run"}</b><div class="mute">Changes apply to every car in this run: ${cn}.</div>
+ <div class="row"><div class="grow"><label>From</label><select data-f="from">${popts(null,d.from)}</select></div><div class="grow"><label>To</label><select data-f="to">${popts(null,d.to)}</select></div></div>
+ <div class="row"><div class="grow"><label>I know the</label><select data-f="mode"><option value="dep" ${d.mode!=="arr"?"selected":""}>Departure time</option><option value="arr" ${d.mode==="arr"?"selected":""}>Arrival time</option></select></div><div class="grow"><label>${d.mode==="arr"?"Arrives by":"Departs"}</label><input type="datetime-local" data-f="tval" value="${local(d.mode==="arr"?d.arrAt:d.dep)}"></div></div>
+ <div class="row"><div class="grow"><label>Travel time (calculated)</label><div class="mute" style="padding:9px 0">${est?est+" min by road, from the route":(flexEnd(d)?"Not needed (park anywhere)":"Needs a position for both places")}</div></div><div class="grow"><label>${d.mode==="arr"?"Leaves about":"Arrives about"}</label><div class="mute" style="padding:9px 0">${tm(d.mode==="arr"?d.arrAt-est*M:d.dep+est*M)}</div></div></div>
+ <label>What’s being moved?</label><input data-f="note" value="${esc(d.note||"")}">
+ <label>Packing starts before departure (min)</label><input type="number" min="0" data-f="packMin" value="${d.packMin}">
+ <label>Unpacking time after arrival (min)</label><input type="number" min="0" data-f="unpackMin" value="${d.unpackMin}">
+ <div class="row" style="margin-top:14px"><button class="p" data-a="save-trip">Save run</button><button class="g" data-a="cancel">Cancel</button></div></div></div>`}
+
+function setupHTML(){
+ const u=esc(S.set.unit),det=(k,t,b)=>`<details data-sec="${k}" ${OPEN.has(k)?"open":""}><summary>${t}</summary>${b}</details>`;
+ const places=`<input id="p-name" placeholder="Place name"><select id="p-parent"><option value="">Top-level place</option>${popts(p=>!p.parent)}</select><select id="p-kind">${KINDS.map(k=>`<option>${k}</option>`).join("")}</select><label style="display:flex;gap:8px;align-items:center;color:var(--ink)"><input id="p-flex" type="checkbox" style="width:auto;margin:0"> No fixed address (park anywhere, for example your own parking spot)</label><input id="p-addr" placeholder="Street address (optional)"><input id="p-ll" placeholder="Coordinates (optional, or use Find address)"><div class="row" style="margin-top:10px"><button class="p" data-a="add-place">Add place</button><button class="g" data-a="find-place">Find in Maps</button></div>`+
+ tree().map(p=>`<div class="item ${p.parent?"sub":""}"><div style="flex:1"><div class="row"><input data-pn="${p.id}" value="${esc(p.name)}" aria-label="Place name" style="font-weight:700;flex:1 1 150px;width:auto"><select data-pk="${p.id}" aria-label="Place type" style="width:auto;margin-top:4px;font-size:13px;padding:5px 8px">${KINDS.map(k=>`<option ${p.kind===k?"selected":""}>${k}</option>`).join("")}</select></div> <button class="g" style="padding:2px 8px" data-a="tog-map" data-id="${p.id}">${p.hide?"Hidden on map":"Shown on map"}</button>${p.flex?`<input data-pi="${p.id}" value="${esc(p.info||"")}" placeholder="Note shown on runs" aria-label="Note for ${esc(p.name)}"><div class="mute">No fixed address, so it is not shown on the map.</div>`:`<div class="row" style="margin-top:4px"><button class="g" data-a="geocode" data-id="${p.id}">Find address</button><button class="g" data-a="pick" data-id="${p.id}">Set on map</button></div><input data-pa="${p.id}" value="${esc(p.addr||"")}" placeholder="Address to determine" aria-label="Address of ${esc(p.name)}"><input data-pl="${p.id}" value="${ll(p)?p.lat+", "+p.lng:""}" placeholder="${p.parent?"Uses parent’s position":"Coordinates (optional)"}" aria-label="Coordinates of ${esc(p.name)}">`}</div><button class="x" data-a="del-place" data-id="${p.id}" aria-label="Remove ${esc(p.name)}">×</button></div>`).join("");
+ const cars=`<input id="v-name" placeholder="Car name or plate"><label>Rented at</label><select id="v-from"><option value="">Not set</option>${popts(p=>p.kind==="Rental"||p.kind==="Parking")}</select><div style="margin-top:10px"><button class="p" data-a="add-car">Add car</button></div>`+
+ S.cars.map(v=>`<div class="item"><div style="flex:1"><input data-cn="${v.id}" value="${esc(v.name)}" aria-label="Car name" style="font-weight:700"><label style="margin-top:4px">Rented or kept at</label><select data-cf="${v.id}"><option value="">Not set</option>${popts(p=>p.kind==="Rental"||p.kind==="Parking"||p.flex,v.from)}</select></div><button class="x" data-a="del-car" data-id="${v.id}" aria-label="Remove ${esc(v.name)}">×</button></div>`).join("");
+ const people=`<div class="row"><input class="grow" id="n-person" placeholder="Person’s name"><button class="p" data-a="add-person">Add</button></div><div class="chips">${S.people.map(p=>`<span class="chip">${esc(p.name)} <button class="x" style="padding:0 0 0 6px;font-size:15px" data-a="del-person" data-id="${p.id}" aria-label="Remove ${esc(p.name)}">×</button></span>`).join("")}</div>`;
+ const notes=`<label>Time</label><input id="nt-at" type="datetime-local" value="${local(dayStart(curDay)+4*H)}"><label>Note</label><input id="nt-text" placeholder="What happens"><label>Place (optional)</label><select id="nt-place"><option value="">None</option>${popts()}</select><div style="margin-top:10px"><button class="p" data-a="add-note">Add note</button></div>`+
+ [...S.notes].sort((a,b)=>a.at-b.at).map(n=>`<div class="item"><div style="flex:1"><div class="row"><input type="datetime-local" data-nt="${n.id}" data-nf="at" value="${local(n.at)}" style="width:auto;flex:1 1 170px" aria-label="Note time"><select data-nt="${n.id}" data-nf="place" style="width:auto;flex:1 1 140px;margin-top:4px;font-size:13px" aria-label="Note place"><option value="">No place</option>${popts(null,n.place)}</select></div><input data-nt="${n.id}" data-nf="text" value="${esc(n.text)}" aria-label="Note text"></div><button class="x" data-a="del-note" data-id="${n.id}" aria-label="Remove note">×</button></div>`).join("");
+ const ev=`<div class="row"><div class="grow"><label>First day</label><input id="s-start" type="date" value="${local(S.set.start).slice(0,10)}"></div><div class="grow"><label>Number of days</label><input id="s-days" type="number" min="1" max="10" value="${S.set.days}"></div><div class="grow"><label>New day starts at (hour)</label><input id="s-hour" type="number" min="0" max="12" value="${S.set.dayHour}"></div></div><div class="row"><div class="grow"><label>Average speed (km/h)</label><input id="s-speed" type="number" min="5" value="${S.set.speed}"></div><div class="grow"><label>Road factor</label><input id="s-factor" type="number" step="0.1" min="1" value="${S.set.factor}"></div><div class="grow"><label>Traffic buffer (× road time)</label><input id="s-traffic" type="number" step="0.05" min="1" value="${S.set.traffic}"></div></div><label>Parking space for end-of-day runs</label><select id="s-park"><option value="">None</option>${popts(null,S.set.parking)}</select><label>Wait after the day’s last unpacking (min)</label><input id="s-parkwait" type="number" min="0" value="${S.set.parkWait}">
+<div class="mute" style="margin-top:6px">Use the buttons to add a run to the parking space for each car after the day’s last trip, leaving after its last arrival and unpacking plus this wait. Cars that end the day at a rental place are skipped. The runs are ordinary runs you can edit or delete.</div><div class="row" style="margin-top:6px"><button class="g" data-a="add-park-all">Add end-of-day parking for all days</button></div><label>Map style</label><select id="s-tilesrc">${[["","Automatic (Esri when opened as a file, OpenStreetMap when hosted)"],["esri","Esri streets (no key)"],["esri-sat","Esri satellite (no key)"],["osm","OpenStreetMap (only when the page is hosted online)"],["custom","Custom URL below (for example MapTiler with your key)"]].map(([v,l])=>`<option value="${v}" ${(S.set.tileSrc||"")===v?"selected":""}>${l}</option>`).join("")}</select><label>Custom tile URL</label><input id="s-tiles" value="${esc(S.set.tiles||"")}" placeholder="https://…/{z}/{x}/{y}.png?key=YOURKEY"><div class="mute" style="margin-top:6px">Trips after midnight stay on the previous day until the new day starts. Travel time comes from road routing on OpenStreetMap data times the traffic buffer. Speed and road factor are only a fallback when routing is unavailable. Type minutes on a trip to override it.</div>`;
+ return`<div class="ov" data-a="bg"><div class="sbox" role="dialog" aria-label="Setup"><div class="row" style="justify-content:space-between"><b style="font-size:17px">Setup</b><button class="p" data-a="close-setup">Done</button></div>${det("publish","Publish to GitHub Pages",publishHTML())}${det("sheet","Google Sheet sign-ups",sheetHTML())}${det("cars","Cars",cars)}${det("people","People",people)}${det("places","Places and subplaces",places)}${det("notes","Plan notes",notes)}${det("event","Event days and travel time",ev)}<div class="row" style="margin-top:12px"><button class="g" data-a="clear-example">Clear trips and notes</button><button class="g" data-a="restore">Restore example</button></div></div></div>`}
+
+function addParkingRuns(days){const pk=by(S.places,S.set.parking);if(!pk){toast("Choose a parking space in Setup first.");return 0}let n=0;
+ days.forEach(i=>{const ts=S.trips.filter(t=>dayIdx(t.dep)===i);if(!ts.length)return;const last={};
+  ts.forEach(t=>{const e=span(t).arr+t.unpackMin*M;if(!last[t.car]||e>last[t.car].e)last[t.car]={t,e}});
+  const dep=Math.min(Math.ceil((Math.max(...Object.values(last).map(x=>x.e))+(S.set.parkWait||0)*M)/(5*M))*5*M,dayStart(i+1)-H);
+  Object.keys(last).forEach(car=>{const l=last[car].t,dest=by(S.places,l.to);if(l.to===pk.id||(dest&&dest.kind==="Rental"))return;
+   S.trips.push({id:uid(),car,from:l.to,to:pk.id,dep,min:0,driver:"",standin:"",riders:[],pack:[],unpack:[],packMin:0,unpackMin:0,load:0,note:"End of day: park the cars"});n++})});
+ toast(n?`Added ${n} parking trip${n>1?"s":""}. Edit or delete them like any other trip.`:"Nothing to add: every car already ends that day at the parking space or at a rental place.");return n}
+function render(){if(inChange){setTimeout(render,0);return}
+ applyArrivals();$("undo").hidden=!undoStack.length;
+ const sb=document.querySelector(".sbox"),st=sb?sb.scrollTop:0;
+ curDay=Math.max(0,Math.min(curDay,S.set.days-1));
+ $("tabs").innerHTML=Array.from({length:S.set.days},(_,i)=>{const d=new Date(dayStart(i)),bad=dayTrips(i).some(t=>problems(t).length);return`<button data-a="day" data-d="${i}" class="${i===curDay?"on":""} ${bad?"bad":""}">${d.toLocaleDateString([], {weekday:"short"})}<small>${d.toLocaleDateString([], {day:"numeric",month:"short"})}</small></button>`}).join("");
+ $("app").innerHTML=appHTML();drawMap();ensureRoutes();
+ const s=$("sheet");if(draft||setupOpen){s.hidden=false;s.innerHTML=draft?form():setupHTML();const n=document.querySelector(".sbox");if(n)n.scrollTop=st}else{s.hidden=true;s.innerHTML=""}}
+document.addEventListener("change",()=>{inChange=true;setTimeout(()=>inChange=false,0)},true);
+document.addEventListener("toggle",e=>{const k=e.target.dataset&&e.target.dataset.sec;if(k)e.target.open?OPEN.add(k):OPEN.delete(k)},true);
+document.addEventListener("click",e=>{
+ const t=e.target.closest("[data-a]");if(!t)return;const a=t.dataset.a,id=t.dataset.id,v=i=>$(i);
+ if(a==="bg"){if(e.target===t){draft=null;setupOpen=false;render()}return}
+ if(a==="day"){curDay=+t.dataset.d;selId="";render();return}
+ if(a==="rows"){rowMode=t.dataset.m;render();return}
+ if(a==="sel-trip"){selId=selId===id?"":id;render();return}
+ if(a==="open-setup"){setupOpen=true;render();return}
+ if(a==="close-setup"){setupOpen=false;render();return}
+ if(a==="new-trip"){if(S.places.length<2||!S.cars.length){toast("Add at least two places and one car in Setup first.");return}
+  const ts=dayTrips(curDay),last=ts[ts.length-1],tp=tree();draft={isNew:true,mode:"dep",from:tp[0].id,to:tp[1].id,min:0,dep:last?last.dep+H:dayStart(curDay)+4*H,packMin:20,unpackMin:20,note:""};render();return}
+ if(a==="edit-trip"){const t0=by(S.trips,id);draft={isNew:false,mode:t0.arrAt?"arr":"dep",arrAt:t0.arrAt||t0.dep+dur(t0)*M,runIds:runIdsOf(t0),from:t0.from,to:t0.to,dep:t0.dep,min:t0.min,note:t0.note||"",packMin:t0.packMin,unpackMin:t0.unpackMin};render();return}
+ if(a==="cancel"){draft=null;render();return}
+ if(a==="tog"){const arr=draft[t.dataset.f],i=arr.indexOf(id);i<0?arr.push(id):arr.splice(i,1);render();return}
+ if(a==="save-trip"){const d=draft;if(d.isNew){const ns=S.cars.map(c=>mkTrip(c.id,d));S.trips.push(...ns);selId=ns[0].id}else{d.runIds.forEach(i=>{const x=by(S.trips,i);if(x)Object.assign(x,{from:d.from,to:d.to,dep:d.mode==="arr"?d.arrAt-estT(d)*M:d.dep,arrAt:d.mode==="arr"?d.arrAt:undefined,min:d.min,note:d.note,packMin:d.packMin,unpackMin:d.unpackMin})});selId=d.runIds[0]}
+  const di=dayIdx(d.dep);if(di>=0)curDay=di;draft=null}
+ if(a==="dup-trip"){const t0=by(S.trips,id),cs=runIdsOf(t0).map(i=>{const c=JSON.parse(JSON.stringify(by(S.trips,i)));c.id=uid();c.dep+=H;if(c.arrAt)c.arrAt+=H;return c});S.trips.push(...cs);selId=cs[0].id}
+ if(a==="add-car-run"){const c=JSON.parse(JSON.stringify(by(S.trips,id)));c.id=uid();c.car=t.dataset.car;c.driver="";c.riders=[];c.pack=[];c.unpack=[];S.trips.push(c);selId=c.id}
+ if(a==="del-run"){const t0=by(S.trips,id);if(!t0)return;if(!ask("r"+id,"Delete this whole run?"))return;const ids=runIdsOf(t0);S.trips=S.trips.filter(x=>!ids.includes(x.id));selId=""}
+ if(a==="del-trip"){if(!ask("t"+id,"Remove this car from the run?"))return;S.trips=S.trips.filter(x=>x.id!==id);selId=""}
+ if(a==="edit-notes"){OPEN.add("notes");setupOpen=true;render();return}
+ if(a==="undo"){const j=undoStack.pop();if(j){S=JSON.parse(j);fixSet();selId="";toast("Restored.")}}
+ if(a==="add-park-day"){addParkingRuns([curDay])}
+ if(a==="add-park-all"){addParkingRuns(Array.from({length:S.set.days},(_,i)=>i))}
+ if(a==="qtog"){const t2=by(S.trips,selId),arr=t2[t.dataset.f],i=arr.indexOf(id);i<0?arr.push(id):arr.splice(i,1)}
+ if(a==="copy-tab"){copyTab(t.dataset.tab);return}
+ if(a==="export-xlsx"){exportXlsx();return}
+ if(a==="export-plan"){exportPlan();return}
+ if(a==="export-csv"){exportCsv();return}
+ if(a==="sync-sheet"){syncSheet(true);return}
+ if(a==="zoom-in"){zoomBy(1);return}
+ if(a==="zoom-out"){zoomBy(-1);return}
+ if(a==="geocode"){geocode(id);return}
+ if(a==="pick"){pick=id;setupOpen=false;render();toast("Tap the map to place it.");return}
+ if(a==="cancel-pick"){pick="";setupOpen=true;render();return}
+ if(a==="tog-map"){const p=by(S.places,id);p.hide=!p.hide}
+ if(a==="add-place"){const n=v("p-name").value.trim();if(!n){v("p-name").focus();return}
+  const p={id:uid(),name:n,kind:v("p-kind").value,addr:v("p-addr").value.trim(),flex:v("p-flex").checked},par=v("p-parent").value,raw=v("p-ll").value.trim(),c=parseLL(raw);
+  if(raw&&!c){toast("Coordinates should look like 59.35, 18.07.");return}if(par)p.parent=par;if(c){p.lat=c[0];p.lng=c[1]}if(p.flex){p.info="Park anywhere. Parking is refunded.";p.addr=""}S.places.push(p);if(p.addr&&!c&&!p.flex)geocode(p.id)}
+ if(a==="find-place"){const q=(v("p-addr").value||v("p-name").value).trim();if(q)window.open("https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q),"_blank","noopener");return}
+ if(a==="del-place"){if(!ask("p"+id,"Remove this place, its subplaces and their trips?"))return;
+  const ids=S.places.filter(p=>p.id===id||p.parent===id).map(p=>p.id);S.places=S.places.filter(p=>!ids.includes(p.id));S.trips=S.trips.filter(x=>!ids.includes(x.from)&&!ids.includes(x.to));S.cars.forEach(x=>{if(ids.includes(x.from))x.from=""})}
+ if(a==="add-car"){const n=v("v-name").value.trim();if(!n){toast("Enter a car name.");return}S.cars.push({id:uid(),name:n,seats:3,cargo:0,from:v("v-from").value})}
+ if(a==="del-car"){if(!ask("c"+id,"Remove this car and its trips?"))return;S.cars=S.cars.filter(x=>x.id!==id);S.trips=S.trips.filter(x=>x.car!==id)}
+ if(a==="add-person"){const n=v("n-person").value.trim();if(!n)return;S.people.push({id:uid(),name:n})}
+ if(a==="del-person"){S.people=S.people.filter(x=>x.id!==id);S.trips.forEach(x=>{if(x.driver===id)x.driver="";["pack","unpack","riders"].forEach(k=>x[k]=x[k].filter(i=>i!==id))})}
+ if(a==="add-note"){const at=new Date(v("nt-at").value).getTime(),tx=v("nt-text").value.trim();if(!tx||isNaN(at)){toast("Enter a time and a note.");return}S.notes.push({id:uid(),at,text:tx,place:v("nt-place").value})}
+ if(a==="del-note"){S.notes=S.notes.filter(n=>n.id!==id)}
+ if(a==="clear-example"){if(!ask("clr","Remove all trips and notes?"))return;S.trips=[];S.notes=[];selId=""}
+ if(a==="restore"){if(!ask("rst","Replace everything with the Nov 12 to 15 plan?"))return;S=sample();draft=null;selId=""}
+ save();render()});
+document.addEventListener("change",e=>{
+ const t=e.target,id=t.id,d=t.dataset;
+ if(id==="plan-file"){const f=t.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(!o.places||!o.trips)throw 0;S=o;fixSet();save();render();toast("Plan loaded.")}catch(x){toast("That file isn’t a plan.json from this app.")}};r.readAsText(f);return}
+ if(id==="s-park"){S.set.parking=t.value;save();render();return}
+ if(id==="s-parkwait"){S.set.parkWait=Math.max(0,parseInt(t.value)||0);save();render();return}
+ if(id==="s-sheet"){S.set.sheet=t.value.trim();save();if(S.set.sheet)syncSheet(true);return}
+ if(id==="s-pack"||id==="s-unpack"){S.set.packSlots=Math.max(0,parseInt($("s-pack").value)||0);S.set.unpackSlots=Math.max(0,parseInt($("s-unpack").value)||0);save();render();return}
+ if(id==="s-tiles"||id==="s-tilesrc"){if(id==="s-tiles")S.set.tiles=t.value.trim();else S.set.tileSrc=t.value;for(const k in TILES){TILES[k].remove();delete TILES[k]}srcStart=0;tilesErr=0;tileWarned=false;save();render();return}
+ if(id==="s-traffic"){S.set.traffic=Math.max(1,+t.value||1.25);save();render();return}
+ if(id==="s-speed"||id==="s-factor"){S.set.speed=Math.max(5,+$("s-speed").value||35);S.set.factor=Math.max(1,+$("s-factor").value||1.3);save();render();return}
+ if(id==="s-unit"){S.set.unit=t.value.trim()||"m³";save();render();return}
+ if(id==="s-start"){const x=new Date(t.value+"T00:00");if(!isNaN(x))S.set.start=x.getTime();save();render();return}
+ if(id==="s-days"){S.set.days=Math.min(10,Math.max(1,parseInt(t.value)||4));save();render();return}
+ if(id==="s-hour"){S.set.dayHour=Math.min(12,Math.max(0,parseInt(t.value)||0));save();render();return}
+ if(d.car){by(S.cars,d.car)[d.vf]=Math.max(0,parseFloat(t.value)||0);save();render();return}
+ if(d.pi){by(S.places,d.pi).info=t.value;save();return}
+ if(d.cn){const c=by(S.cars,d.cn),nm=t.value.trim();if(nm){c.name=nm;save();render()}else t.value=c.name;return}
+ if(d.cf){by(S.cars,d.cf).from=t.value;save();render();return}
+ if(d.nt){const n=by(S.notes,d.nt);if(!n)return;if(d.nf==="at"){const v=new Date(t.value).getTime();if(v)n.at=v}else if(d.nf==="text"){const s=t.value.trim();if(s)n.text=s;else t.value=n.text}else n.place=t.value;save();render();return}
+ if(d.pn){const p=by(S.places,d.pn),nm=t.value.trim();if(nm){p.name=nm;save();render()}else t.value=p.name;return}
+ if(d.pk){by(S.places,d.pk).kind=t.value;save();render();return}
+ if(d.pa){by(S.places,d.pa).addr=t.value.trim();save();return}
+ if(d.pl){const p=by(S.places,d.pl),raw=t.value.trim(),c=parseLL(raw);if(!raw){delete p.lat;delete p.lng}else if(c){p.lat=c[0];p.lng=c[1]}else{toast("Coordinates should look like 59.35, 18.07.");render();return}save();render();return}
+ if(d.q==="standin"){const t2=by(S.trips,selId);if(t2){runIdsOf(t2).forEach(i=>{by(S.trips,i).standin=t.value});save();render()}return}
+ if(d.q){const t2=by(S.trips,selId);if(t2){t2[d.q]=d.q==="load"?Math.max(0,parseFloat(t.value)||0):t.value;save();render()}return}
+ const f=d.f;if(!f||!draft)return;const val=t.value;
+ if(f==="tval"){const v=new Date(val).getTime();if(v){if(draft.mode==="arr")draft.arrAt=v;else draft.dep=v}render();return}
+ if(f==="mode"){if(val==="arr"&&draft.mode!=="arr")draft.arrAt=draft.dep+estT(draft)*M;if(val==="dep"&&draft.mode==="arr")draft.dep=draft.arrAt-estT(draft)*M;draft.mode=val;render();return}
+ draft[f]=f==="dep"?(new Date(val).getTime()||draft.dep):(f==="packMin"||f==="unpackMin"||f==="min")?Math.max(0,parseInt(val)||0):f==="load"?Math.max(0,parseFloat(val)||0):val;
+ if(["car","from","to","dep","min","load","driver"].includes(f))render()});
+(function(){S.trips.forEach(t=>{delete t.park});delete S.set.parkOff;const hasLL=p=>typeof p.lat==="number",v=S.places.find(p=>p.name==="Viking Terminalen"&&(!p.addr||/Stadsgårdskajen/.test(p.addr)));
+ if(v){v.addr="Terminalen Stadsgården, Tegelvikshamn, 116 45 Stockholm";v.lat=59.3151;v.lng=18.0959}
+ const m=S.places.find(p=>p.name==="MF (storage and concert)");if(m){m.name="MF (Medicinska Föreningen)";if(!m.addr)m.addr="Nobels väg 10, 171 65 Solna";if(!hasLL(m)){m.lat=59.35;m.lng=18.0262}}
+ let dp=S.places.find(p=>p.name==="Datasektionen parking");if(!dp){dp={id:uid(),name:"Datasektionen parking",kind:"Parking",addr:"Position to be determined"};S.places.push(dp)}
+ if(S.set.parking===undefined)S.set.parking=dp.id;
+ if(hadLocal)save()})();
+render();
+if(EDIT){$("banner").hidden=false;$("banner").textContent="Edit mode: your changes stay in this browser. To publish them, download plan.json from Setup and commit it next to this page."}
+(async()=>{let plan=null;try{const r=await fetch("plan.json",{cache:"no-store"});if(r.ok)plan=await r.json()}catch(e){}
+ if(plan&&plan.places&&plan.trips&&(!EDIT||!hadLocal)){S=plan;fixSet();selId="";curDay=0;save();render()}
+ if(S.set.sheet)syncSheet(false)})();
+setInterval(()=>{if(S.set.sheet&&!document.hidden&&!draft&&!setupOpen)syncSheet(false)},12e4);
+</script>
+</body>
+</html>

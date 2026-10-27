@@ -1,0 +1,579 @@
+{
+ "places": [
+  {
+   "id": "b7uydu",
+   "name": "Instrument storage KTH",
+   "kind": "Storage",
+   "addr": "KTH campus, Stockholm",
+   "lat": 59.3498,
+   "lng": 18.0707
+  },
+  {
+   "id": "z3x9a3",
+   "name": "Sqrubben",
+   "kind": "Storage",
+   "parent": "b7uydu"
+  },
+  {
+   "id": "unrvs7",
+   "name": "Kröken",
+   "kind": "Storage",
+   "parent": "b7uydu"
+  },
+  {
+   "id": "pxpis4",
+   "name": "Nymble",
+   "kind": "Storage",
+   "parent": "b7uydu"
+  },
+  {
+   "id": "iy87ww",
+   "name": "MF (Medicinska Föreningen)",
+   "kind": "Venue",
+   "addr": "Nobels väg 10, 171 65 Solna",
+   "lat": 59.35,
+   "lng": 18.0262
+  },
+  {
+   "id": "o8roq7",
+   "name": "Aulan",
+   "kind": "Venue",
+   "parent": "iy87ww"
+  },
+  {
+   "id": "q7owga",
+   "name": "Viking Terminalen",
+   "kind": "Ferry",
+   "addr": "Terminalen Stadsgården, Tegelvikshamn, 116 45 Stockholm",
+   "lat": 59.3151,
+   "lng": 18.0959
+  },
+  {
+   "id": "nx9fcc",
+   "name": "Arlanda airport",
+   "kind": "Other",
+   "addr": "Arlanda",
+   "lat": 59.6519,
+   "lng": 17.9186,
+   "hide": true
+  },
+  {
+   "id": "uq34nv",
+   "name": "Odenplan",
+   "kind": "Other",
+   "addr": "Odenplan, Stockholm",
+   "lat": 59.3428,
+   "lng": 18.0495
+  },
+  {
+   "id": "4unfei",
+   "name": "OKQ8 (address to determine)",
+   "kind": "Rental",
+   "addr": "Kungshamravägen 1, 170 70 Solna",
+   "lat": 59.38006,
+   "lng": 18.02556
+  },
+  {
+   "id": "6jl0j5",
+   "name": "Your own parking spot",
+   "kind": "Parking",
+   "addr": "",
+   "flex": true,
+   "info": "Park anywhere. Parking is refunded."
+  },
+  {
+   "id": "ncd1lg",
+   "name": "Datasektionen parking",
+   "kind": "Parking",
+   "addr": "",
+   "flex": false,
+   "parent": "b7uydu"
+  }
+ ],
+ "cars": [
+  {
+   "id": "ggzzid",
+   "name": "Data Van",
+   "seats": 3,
+   "cargo": 8,
+   "from": "ncd1lg"
+  },
+  {
+   "id": "w6smrp",
+   "name": "OKQ8 Bil",
+   "seats": 2,
+   "cargo": 8,
+   "from": "4unfei"
+  }
+ ],
+ "people": [
+  {
+   "id": "rvpzr7",
+   "name": "McLovin"
+  },
+  {
+   "id": "6gewqu",
+   "name": "Alina"
+  },
+  {
+   "id": "382tfm",
+   "name": "SiN"
+  },
+  {
+   "id": "xvuo5y",
+   "name": "Olyckan"
+  },
+  {
+   "id": "xnobrw",
+   "name": "RJ"
+  }
+ ],
+ "img": null,
+ "set": {
+  "speed": 35,
+  "factor": 1.3,
+  "unit": "m³",
+  "start": 1794438000000,
+  "days": 4,
+  "dayHour": 5,
+  "traffic": 1.25,
+  "packSlots": 2,
+  "unpackSlots": 2,
+  "sheet": "https://docs.google.com/spreadsheets/d/1fGI9atySvjQbWm0rvJxcjpg-AvNQVgrVmnO5W3Ss3V0/edit?usp=sharing",
+  "parkWait": 30,
+  "parking": "54gi0d",
+  "lastSync": 1793134757932
+ },
+ "trips": [
+  {
+   "id": "ywejrw",
+   "dep": 1794551400000,
+   "car": "w6smrp",
+   "from": "q7owga",
+   "to": "b7uydu",
+   "min": 0,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "Ferry and bus arrive 7:00, instruments to KTH storage",
+   "standin": ""
+  },
+  {
+   "id": "pmrk58",
+   "dep": 1794559800000,
+   "car": "ggzzid",
+   "from": "b7uydu",
+   "to": "q7owga",
+   "min": 0,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "Retuperän arrives, stuff to Instrument storage",
+   "standin": "",
+   "arrAt": 1794561000000
+  },
+  {
+   "id": "pa4h1b",
+   "dep": 1794589200000,
+   "car": "ggzzid",
+   "from": "b7uydu",
+   "to": "o8roq7",
+   "min": 20,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "Move to MF, guess: add rounds as needed. Start earlier if you wanna make it in time for Sprint orienteering",
+   "standin": ""
+  },
+  {
+   "id": "hyrwar",
+   "dep": 1794643200000,
+   "car": "ggzzid",
+   "from": "o8roq7",
+   "to": "uq34nv",
+   "min": 20,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "Get your car to Aulan then go from MF storage to Odenplan.",
+   "standin": ""
+  },
+  {
+   "id": "x6d0z7",
+   "dep": 1794643200000,
+   "car": "w6smrp",
+   "from": "o8roq7",
+   "to": "uq34nv",
+   "min": 20,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "Get your car to Aulan then go from MF storage to Odenplan.",
+   "standin": ""
+  },
+  {
+   "id": "uhtd56",
+   "dep": 1794657600000,
+   "car": "ggzzid",
+   "from": "uq34nv",
+   "to": "o8roq7",
+   "min": 20,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "Back to MF storage, then park your car",
+   "standin": ""
+  },
+  {
+   "id": "5agc8k",
+   "dep": 1794657600000,
+   "car": "w6smrp",
+   "from": "uq34nv",
+   "to": "o8roq7",
+   "min": 20,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "Back to MF storage, then park your car",
+   "standin": ""
+  },
+  {
+   "id": "d1shzy",
+   "dep": 1794700800000,
+   "car": "ggzzid",
+   "from": "o8roq7",
+   "to": "b7uydu",
+   "min": 20,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "People take their instruments but there will be instruments left probably after this and we absolutely need to empty Aula",
+   "standin": ""
+  },
+  {
+   "id": "3tlxsu",
+   "dep": 1794758400000,
+   "car": "ggzzid",
+   "from": "pxpis4",
+   "to": "q7owga",
+   "min": 0,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "Finns with return ferry",
+   "standin": ""
+  },
+  {
+   "id": "gumrud",
+   "dep": 1794758400000,
+   "car": "w6smrp",
+   "from": "pxpis4",
+   "to": "q7owga",
+   "min": 0,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "Finns with return ferry",
+   "standin": ""
+  },
+  {
+   "id": "e95t9g",
+   "dep": 1794765600000,
+   "car": "w6smrp",
+   "from": "q7owga",
+   "to": "4unfei",
+   "min": 20,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "Return cars after the drop-off",
+   "standin": ""
+  },
+  {
+   "id": "1hojnq",
+   "car": "w6smrp",
+   "from": "4unfei",
+   "to": "6jl0j5",
+   "dep": 1794501000000,
+   "min": 0,
+   "driver": "rvpzr7",
+   "standin": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 0,
+   "unpackMin": 0,
+   "load": 0,
+   "note": "Get the car at OKQ8"
+  },
+  {
+   "id": "jdvhcg",
+   "car": "ggzzid",
+   "from": "ncd1lg",
+   "to": "q7owga",
+   "dep": 1794548400000,
+   "arrAt": 1794549600000,
+   "min": 0,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "",
+   "standin": ""
+  },
+  {
+   "id": "k3lz23",
+   "car": "w6smrp",
+   "from": "6jl0j5",
+   "to": "q7owga",
+   "dep": 1794549600000,
+   "arrAt": 1794549600000,
+   "min": 0,
+   "driver": "rvpzr7",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "",
+   "standin": ""
+  },
+  {
+   "id": "q5lf9y",
+   "dep": 1794551400000,
+   "car": "ggzzid",
+   "from": "q7owga",
+   "to": "b7uydu",
+   "min": 0,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "Ferry and bus arrive 7:00, instruments to KTH storage",
+   "standin": ""
+  },
+  {
+   "id": "924p62",
+   "dep": 1794559800000,
+   "car": "w6smrp",
+   "from": "b7uydu",
+   "to": "q7owga",
+   "min": 0,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "Retuperän arrives, stuff to Instrument storage",
+   "standin": "",
+   "arrAt": 1794561000000
+  },
+  {
+   "id": "wnmh34",
+   "dep": 1794564000000,
+   "car": "ggzzid",
+   "from": "q7owga",
+   "to": "b7uydu",
+   "min": 0,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "Retuperän arrives, stuff to Instrument storage",
+   "standin": ""
+  },
+  {
+   "id": "tvkzpv",
+   "dep": 1794564000000,
+   "car": "w6smrp",
+   "from": "q7owga",
+   "to": "b7uydu",
+   "min": 0,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "Retuperän arrives, stuff to Instrument storage",
+   "standin": ""
+  },
+  {
+   "id": "6yh0z3",
+   "dep": 1794589200000,
+   "car": "w6smrp",
+   "from": "b7uydu",
+   "to": "o8roq7",
+   "min": 20,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "Move to MF, guess: add rounds as needed. Start earlier if you wanna make it in time for Sprint orienteering",
+   "standin": ""
+  },
+  {
+   "id": "15f3vw",
+   "car": "ggzzid",
+   "from": "q7owga",
+   "to": "ncd1lg",
+   "dep": 1794765600000,
+   "min": 0,
+   "driver": "",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "Return cars after the drop off",
+   "standin": ""
+  }
+ ],
+ "notes": [
+  {
+   "id": "o76brv",
+   "at": 1794499200000,
+   "text": "Pick up cars at OKQ8. Taken by the people who drive them very early on Friday.",
+   "place": ""
+  },
+  {
+   "id": "2ktac7",
+   "at": 1794549600000,
+   "text": "Ferry arrives, bus arrives for 7:00. Instruments go to KTH storage.",
+   "place": "q7owga"
+  },
+  {
+   "id": "o5i4ow",
+   "at": 1794560400000,
+   "text": "Retuperän arrives at Viking Terminalen, stuff to Kröken.",
+   "place": "q7owga"
+  },
+  {
+   "id": "yj4qa0",
+   "at": 1794573000000,
+   "text": "Part of Strindens arrives at Arlanda. Arrival time of the rest unknown.",
+   "place": "nx9fcc"
+  },
+  {
+   "id": "un7xm6",
+   "at": 1794574800000,
+   "text": "Alliancen arrive by bus (time told, unconfirmed), likely park close to KTH campus.",
+   "place": "b7uydu"
+  },
+  {
+   "id": "6fk7hx",
+   "at": 1794578400000,
+   "text": "All instruments are in KTH storage at this point.",
+   "place": ""
+  },
+  {
+   "id": "b088kn",
+   "at": 1794583800000,
+   "text": "KTH authorizes us to start playing.",
+   "place": ""
+  },
+  {
+   "id": "606f0h",
+   "at": 1794589200000,
+   "text": "Around now all instruments move to MF or similar.",
+   "place": "o8roq7"
+  },
+  {
+   "id": "tdrq6o",
+   "at": 1794603600000,
+   "text": "Party and gigs at MF until 01:00. Instruments must be there by then.",
+   "place": "o8roq7"
+  },
+  {
+   "id": "o9prk0",
+   "at": 1794643200000,
+   "text": "MF instrument storage to Odenplan.",
+   "place": "uq34nv"
+  },
+  {
+   "id": "xj6j19",
+   "at": 1794657600000,
+   "text": "Back to instrument storage MF.",
+   "place": "o8roq7"
+  },
+  {
+   "id": "womi61",
+   "at": 1794700800000,
+   "text": "People take their own instruments with them, but there will probably be some left. All instruments transported to KTH after we are done.",
+   "place": "b7uydu"
+  },
+  {
+   "id": "f038sp",
+   "at": 1794762000000,
+   "text": "Ferry check-in around 18:00, departs 20:00. Nymble storage to ferry for those with a return ferry.",
+   "place": "q7owga"
+  },
+  {
+   "id": "y77rgo",
+   "at": 1794769200000,
+   "text": "Give cars back in the evening, after the Finns are dropped at the ferry. OKQ8 or Datasektionen parking spot",
+   "place": ""
+  }
+ ]
+}
