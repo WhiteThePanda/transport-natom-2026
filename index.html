@@ -48,12 +48,14 @@ button.iss{display:block;width:100%;text-align:left;border:0;font:inherit;font-s
 @media(prefers-reduced-motion:reduce){.pulse{animation:none}.drawn{animation:none!important;stroke-dashoffset:0!important}}
 .pill{display:inline-block;background:var(--chip);border-radius:6px;padding:0 7px;font-size:12px;margin:1px 3px 1px 0}
 .gt{overflow-x:auto}.gt>div{min-width:560px}
-.g2{display:grid;grid-template-columns:92px minmax(0,1fr);gap:6px;align-items:center;margin:3px 0}
+.g2{display:grid;grid-template-columns:var(--lw,92px) minmax(0,1fr);gap:6px;align-items:center;margin:3px 0}
 .lbl{font-size:13px;line-height:1.2}.lbl small{display:block;color:var(--mute);font-size:11px}
 .axis{position:relative;height:15px;font-size:11px;color:var(--mute)}.axis span{position:absolute}
 .track{position:relative;height:30px;border-bottom:1px solid var(--line);background-image:linear-gradient(to right,var(--line) 1px,transparent 1px);background-size:calc(100%/var(--n)) 100%}
-.blk{position:absolute;top:3px;height:24px;border:0;border-radius:5px;font-size:11px;padding:0 5px;overflow:hidden;white-space:nowrap;text-align:left;cursor:pointer;color:var(--bink);background:var(--bk)}
+.blk{position:absolute;min-width:58px;top:3px;height:24px;border:0;border-radius:5px;font-size:11px;padding:0 5px;overflow:hidden;white-space:nowrap;text-align:left;cursor:pointer;color:var(--bink);background:var(--bk)}
 .k-drive{--bk:var(--acc)}.k-ride{--bk:var(--mute)}.k-pack{--bk:var(--pk)}.k-unpack{--bk:var(--up)}
+.band{position:absolute;top:0;bottom:0;background:var(--pk);opacity:.13;pointer-events:none}
+.blk.k-help{background:linear-gradient(90deg,var(--pk) 50%,var(--up) 50%)}
 .k-standin{--bk:var(--c3)}
 .blk.k-standin{background:repeating-linear-gradient(135deg,var(--bk) 0 6px,color-mix(in srgb,var(--bk) 70%,#fff) 6px 12px);font-weight:700}
 .blk.k-nostandin{background:transparent;color:var(--warn);border:2px dashed var(--warn)}
@@ -145,7 +147,7 @@ const hadLocal=!!(S&&S.places);
 if(!S||!S.places)S=sample();
 S.set.traffic=S.set.traffic||1.25;S.set.packSlots=S.set.packSlots??2;S.set.unpackSlots=S.set.unpackSlots??2;S.set.sheet=S.set.sheet||"";S.set.parkWait=S.set.parkWait??30;
 let ROUTES={};try{ROUTES=JSON.parse(localStorage.getItem(KEY+"-routes"))||{}}catch(e){}
-let inChange=false,draft=null,setupOpen=false,curDay=0,selId="",rowMode="cars",pick="";const OPEN=new Set(["cars"]);
+let inChange=false,draft=null,setupOpen=false,curDay=0,selId="",rowMode="runs",PPH=120,pick="";const OPEN=new Set(["cars"]);
 const save=()=>{if(!EDIT)return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 const by=(a,id)=>a.find(x=>x.id===id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -272,13 +274,12 @@ function zoneSelHTML(d){const sel=(f,list,cur,lab)=>list.length?`<label>${lab}</
 function zonesHTML(p){const zs=p.zones||[],o=(z,k,l)=>`<option value="${k}" ${z.use===k?"selected":""}>${l}</option>`;
  return`<div class="mute" style="margin-top:8px">Loading and unloading zones${zs.length?"":" (none defined yet)"}</div>${zs.map(z=>`<div class="row" style="margin-top:4px"><input data-zp="${p.id}" data-zid="${z.id}" data-zf="name" value="${esc(z.name)}" placeholder="Zone name" aria-label="Zone name" style="flex:1 1 110px;width:auto"><select data-zp="${p.id}" data-zid="${z.id}" data-zf="use" aria-label="Zone use" style="width:auto;margin-top:6px;font-size:13px">${o(z,"both","Load and unload")}${o(z,"load","Loading only")}${o(z,"unload","Unloading only")}</select><input data-zp="${p.id}" data-zid="${z.id}" data-zf="note" value="${esc(z.note||"")}" placeholder="Note, for example entrance" aria-label="Zone note" style="flex:2 1 150px;width:auto"><button class="x" data-a="del-zone" data-id="${p.id}" data-zid="${z.id}" aria-label="Remove zone">×</button></div>`).join("")}<button class="g" style="margin-top:6px" data-a="add-zone" data-id="${p.id}">Add zone</button>`}
 function standinRow(all){const bl=runsOf(all).map(g=>{const t=g[0],s=g.find(x=>x.standin&&by(S.people,x.standin)),nm=s?by(S.people,s.standin).name:"";return{s:t.dep,e:span(t).arr,id:t.id,bad:false,kind:s?"standin":"nostandin",text:s?esc(nm):"No stand-in yet",title:s?`Stand-in (sober backup): ${esc(nm)} for ${rlabel(t)}`:`No stand-in yet for ${rlabel(t)}`}}).sort((a,b)=>a.s-b.s),ends=[];
- bl.forEach(b=>{let l=0;while(ends[l]!==undefined&&ends[l]>b.s)l++;ends[l]=Math.max(b.e,b.s+45*M);b.lane=l});
+ bl.forEach(b=>{let l=0;while(ends[l]!==undefined&&ends[l]>b.s)l++;ends[l]=Math.max(b.e,b.s+75*M);b.lane=l});
  return{label:'<b>Stand-in</b><small>sober backup</small>',blocks:bl,h:3+Math.max(1,ends.length)*27}}
-function helpBlocks(p,all){const busy=all.filter(t=>t.driver===p.id||t.riders.includes(p.id)).map(t=>[t.dep,span(t).arr]),out=[],ok=(s,e)=>!busy.some(b=>s<b[1]&&b[0]<e);
- runsOf(all).forEach(g=>{const t=g[0],arr=span(t).arr;if(g.some(x=>x.standin===p.id))out.push({s:t.dep,e:arr,id:t.id,bad:false,kind:"standin",text:"Sober backup",title:`Stand-in (sober backup) for ${rlabel(t)}; also helps load and unload`});
-  if(g.some(x=>x.driver===p.id))return;
-  if(t.packMin>0&&ok(t.dep-t.packMin*M,t.dep))out.push({s:t.dep-t.packMin*M,e:t.dep,id:t.id,bad:false,kind:"pack",text:"Load",title:`Load at ${plain(t.from)}: everyone not driving helps`});
-  if(t.unpackMin>0&&ok(arr,arr+t.unpackMin*M))out.push({s:arr,e:arr+t.unpackMin*M,id:t.id,bad:false,kind:"unpack",text:"Unload",title:`Unload at ${plain(t.to)}: everyone not driving helps`})});return out}
+function helpBlocks(p,all){const out=[];runsOf(all).forEach(g=>{const t=g[0];if(g.some(x=>x.standin===p.id))out.push({s:t.dep,e:span(t).arr,id:t.id,bad:false,kind:"standin",text:"Sober backup",title:`Stand-in (sober backup) for ${rlabel(t)}; also helps load and unload`})});return out}
+function helpWindows(all){const w=[];runsOf(all).forEach(g=>{const t=g[0],arr=span(t).arr,ps=t.dep-t.packMin*M;
+ if(t.packMin>0)w.push({s:ps,e:t.dep,id:t.id,bad:false,kind:"pack",text:"Load "+hm(ps),title:esc(`Load at ${plain(t.from)} ${tm(ps)} to ${tm(t.dep)}. Everyone not driving helps.`)});
+ if(t.unpackMin>0)w.push({s:arr,e:arr+t.unpackMin*M,id:t.id,bad:false,kind:"unpack",text:"Unload "+hm(arr),title:esc(`Unload at ${plain(t.to)} ${tm(arr)} to ${tm(arr+t.unpackMin*M)}. Everyone not driving helps.`)})});return w.sort((a,b)=>a.s-b.s)}
 function openSlots(t){const o=[];if(!t.driver)o.push("driver");if(!t.standin)o.push("stand-in");return o}
 function openPills(t){const o=openSlots(t);return o.length?`<span class="mute">Open: ${o.join(", ")}</span>`:'<span class="mute">Driver and stand-in set</span>'}
 function selPanel(t){const v=by(S.cars,t.car),u=esc(S.set.unit),pr=problems(t),gl=gmap(by(S.places,t.from),by(S.places,t.to));
@@ -368,25 +369,34 @@ function sheetHTML(){return`<div class="mute" style="margin:8px 0">Volunteers pu
  <label>Google Sheet link</label><input id="s-sheet" value="${esc(S.set.sheet||"")}" placeholder="https://docs.google.com/spreadsheets/d/…">
  <div class="row" style="margin-top:10px"><button class="p" data-a="sync-sheet">Sync now</button><button class="g" data-a="export-csv">Download current drivers (CSV)</button></div>
  <div class="mute" style="margin-top:6px">${S.set.lastSync?"Last synced "+tm(S.set.lastSync)+". ":"Not synced yet. "}Auto-sync every 2 minutes. The sheet replaces the drivers set in the app.</div>`}
-function gantt(rows,d0,d1){
- const all=rows.flatMap(r=>r.blocks).filter(b=>b.s>=d0&&b.s<d1);
+function gantt(rows,d0,d1,o){o=o||{};const lw=o.lw||92,pph=PPH,vis=r=>r.blocks.filter(b=>b.e>d0&&b.s<d1),all=rows.flatMap(vis);
  if(!all.length)return'<div class="mute" style="padding:8px 0">No trips on this day yet.</div>';
  const lo=Math.floor(Math.min(...all.map(b=>b.s))/H)*H;let hi=Math.ceil(Math.max(...all.map(b=>b.e))/H)*H;if(hi-lo<3*H)hi=lo+3*H;
- const n=(hi-lo)/H,pc=t=>Math.min(100,Math.max(0,(t-lo)/(hi-lo)*100));
- return`<div class="gt"><div style="--n:${n}"><div class="g2"><div></div><div class="axis">${Array.from({length:n},(_,i)=>`<span style="left:${i/n*100}%">${tm(lo+i*H)}</span>`).join("")}</div></div>`+
- rows.map(r=>`<div class="g2"><div class="lbl">${r.label}</div><div class="track"${r.h?` style="height:${r.h}px"`:""}>${r.blocks.filter(b=>b.s>=d0&&b.s<d1).map(b=>`<button class="blk k-${b.kind}${b.bad?" bad":""}${b.id===selId?" sel":""}" style="left:${pc(b.s)}%;width:${Math.max(/standin/.test(b.kind)?10:6,pc(b.e)-pc(b.s))}%${b.color?";--bk:"+b.color:""}${b.lane?";top:"+(3+b.lane*27)+"px":""}" data-a="sel-trip" data-id="${b.id}" title="${b.title}">${b.text}</button>`).join("")}</div></div>`).join("")+"</div></div>"}
+ const n=(hi-lo)/H,pc=t=>Math.min(100,Math.max(0,(t-lo)/(hi-lo)*100)),minMs=62/pph*H,
+ bandHTML=(o.bands||[]).filter(b=>b.e>lo&&b.s<hi).map(b=>`<i class="band" style="left:${pc(b.s)}%;width:${Math.max(.3,pc(b.e)-pc(b.s))}%"></i>`).join("");
+ return`<div class="gt"><div style="--n:${n};--lw:${lw}px;min-width:${Math.max(560,Math.round(n*pph+lw+14))}px"><div class="g2"><div></div><div class="axis">${Array.from({length:n},(_,i)=>`<span style="left:${i/n*100}%">${tm(lo+i*H)}</span>`).join("")}</div></div>`+
+ rows.map(r=>{const bs=vis(r).sort((a,b)=>a.s-b.s),ends=[];bs.forEach(b=>{let l=0;while(ends[l]!==undefined&&ends[l]>b.s)l++;ends[l]=Math.max(b.e,b.s+minMs);b.lane=l});const h=3+Math.max(1,ends.length)*27;
+  return`<div class="g2"><div class="lbl">${r.label}</div><div class="track" style="height:${h}px">${bandHTML}${bs.map(b=>`<button class="blk k-${b.kind}${b.bad?" bad":""}${b.id===selId?" sel":""}" style="left:${pc(b.s)}%;width:${Math.max(.3,pc(b.e)-pc(b.s))}%;top:${3+b.lane*27}px${b.color?";--bk:"+b.color:""}" data-a="sel-trip" data-id="${b.id}" title="${b.title}">${b.text}</button>`).join("")}</div></div>`}).join("")+"</div></div>"}
+
+function runRows(ts){return runsOf(ts).map(g=>{const t=g[0],arr=span(t).arr,ps=t.dep-(t.packMin||0)*M,ue=arr+(t.unpackMin||0)*M,bad=g.some(x=>problems(x).length>0),
+ dr=[...new Set(g.map(x=>by(S.people,x.driver)?.name).filter(Boolean))].join(", ")||"no driver yet",sb=g.find(x=>x.standin&&by(S.people,x.standin)),bl=[];
+ if(t.packMin>0)bl.push({s:ps,e:t.dep,id:t.id,bad:false,kind:"pack",text:"Load "+hm(ps),title:esc(`Load from ${tm(ps)} at ${plain(t.from)}`)});
+ bl.push({s:t.dep,e:Math.max(arr,t.dep+M),id:t.id,bad,kind:"drive",text:esc(dr),title:esc(`${plain(t.from)} to ${plain(t.to)}, ${tm(t.dep)} to ${tm(arr)}`)});
+ if(t.unpackMin>0)bl.push({s:arr,e:ue,id:t.id,bad:false,kind:"unpack",text:"Unload",title:esc(`Unload until ${tm(ue)} at ${plain(t.to)}`)});
+ return{label:`<b>${rlabel(t)}</b><small>Load ${tm(ps)}, leave ${tm(t.dep)}, arrive ${tm(arr)}, unload until ${tm(ue)}</small><small>${esc(dr)}${sb?`; stand-in ${esc(by(S.people,sb.standin).name)}`:""}</small>`,blocks:bl}})}
 
 function appHTML(){
  const ts=dayTrips(curDay),d0=dayStart(curDay),d1=dayStart(curDay+1),u=esc(S.set.unit),all=[...S.trips].sort((a,b)=>a.dep-b.dep);
- const rows=rowMode==="cars"?[...S.cars.map(v=>({label:`<b><i class="cd" style="background:${carColor(v.id)}"></i>${esc(v.name)}</b>${carInfo(v)?`<small>${esc(carInfo(v))}</small>`:""}`,blocks:all.filter(t=>t.car===v.id).map(t=>({s:t.dep,e:span(t).arr,kind:"drive",color:carColor(v.id),id:t.id,bad:problems(t).length>0,text:`${esc(who(t))}: ${rlabel(t)}`,title:`${tm(t.dep)} ${esc(who(t))}: ${rlabel(t)}`}))})),standinRow(all)]:
- S.people.map(p=>({label:`<b>${esc(p.name)}</b>`,blocks:[...all.flatMap(t=>{const bad=problems(t).length>0;return(ivals(t)[p.id]||[]).filter(x=>x[2]==="driving"||x[2]==="riding").map(([s,e,k])=>({s,e,id:t.id,bad,kind:k==="driving"?"drive":"ride",text:k==="driving"?"Drive":"Ride",title:`${k} ${rlabel(t)}`}))}),...helpBlocks(p,all)]}));
+ const hw=rowMode==="people"?helpWindows(all):[];
+ const rows=rowMode==="runs"?runRows(ts):rowMode==="cars"?[...S.cars.map(v=>({label:`<b><i class="cd" style="background:${carColor(v.id)}"></i>${esc(v.name)}</b>${carInfo(v)?`<small>${esc(carInfo(v))}</small>`:""}`,blocks:all.filter(t=>t.car===v.id).map(t=>({s:t.dep,e:span(t).arr,kind:"drive",color:carColor(v.id),id:t.id,bad:problems(t).length>0,text:`${esc(who(t))}: ${rlabel(t)}`,title:`${tm(t.dep)} ${esc(who(t))}: ${rlabel(t)}`}))})),standinRow(all)]:
+ [{label:'<b>All hands</b><small>everyone not driving</small>',blocks:hw},...S.people.map(p=>({label:`<b>${esc(p.name)}</b>`,blocks:[...all.flatMap(t=>{const bad=problems(t).length>0;return(ivals(t)[p.id]||[]).filter(x=>x[2]==="driving"||x[2]==="riding").map(([s,e,k])=>({s,e,id:t.id,bad,kind:k==="driving"?"drive":"ride",text:k==="driving"?"Drive":"Ride",title:`${k} ${rlabel(t)}`}))}),...helpBlocks(p,all)]}))];
  const iss=ts.flatMap(t=>problems(t).map(x=>({t,x}))),nod=ts.filter(t=>!t.driver).length;
- const leg=rowMode==="people"?'<div class="leg">'+[["drive","Drive"],["standin","Sober stand-in (also helps load and unload)"],["pack","Load (everyone not driving helps)"],["unpack","Unload (everyone not driving helps)"]].map(([k,l])=>`<span class="k-${k}"><i></i>${l}</span>`).join("")+"</div><div class=\"mute\">Everyone who isn’t driving helps load and unload, including the stand-in, who only has to stay sober.</div>":'<div class="leg"><span class="k-standin"><i></i>Sober stand-in (also helps load and unload)</span><span><i style="background:transparent;border:2px dashed var(--warn);box-sizing:border-box"></i>No stand-in yet</span></div>';
+ const leg=rowMode==="runs"?'<div class="leg"><span class="k-pack"><i></i>Load</span><span class="k-drive"><i></i>Drive</span><span class="k-unpack"><i></i>Unload</span></div><div class="mute">Each row is one run. The label gives the exact load start, departure, arrival and unload end.</div>':rowMode==="people"?'<div class="leg">'+[["drive","Drive"],["standin","Sober stand-in (also helps load and unload)"],["pack","Load (everyone not driving helps)"],["unpack","Unload (everyone not driving helps)"]].map(([k,l])=>`<span class="k-${k}"><i></i>${l}</span>`).join("")+"</div><div class=\"mute\">Everyone who isn’t driving helps load and unload, including the stand-in, who only has to stay sober.</div>":'<div class="leg"><span class="k-standin"><i></i>Sober stand-in (also helps load and unload)</span><span><i style="background:transparent;border:2px dashed var(--warn);box-sizing:border-box"></i>No stand-in yet</span></div>';
  const notes=S.notes.filter(n=>dayIdx(n.at)===curDay).sort((a,b)=>a.at-b.at);
  return`<div class="row" style="margin:6px 0 10px"><span class="kp">${ts.length} trip${ts.length===1?"":"s"}</span>${nod?`<span class="kp">${nod} without driver</span>`:""}<span class="kp ${iss.length?"bad":""}">${iss.length?iss.length+" issue"+(iss.length>1?"s":""):"No issues"}</span></div>
  ${selId&&by(S.trips,selId)?(EDIT?selPanel:selPanelRO)(by(S.trips,selId)):""}
  ${notes.length||EDIT?`<div class="card"><div class="row" style="justify-content:space-between"><b>Plan for the day</b><button class="g eo" data-a="edit-notes">${notes.length?"Edit notes":"Add a note"}</button></div>${notes.length?"":'<div class="mute">No notes for this day yet.</div>'}${notes.map(n=>`<div class="note"><b>${tm(n.at)}</b><span>${esc(n.text)}${n.place&&by(S.places,n.place)?` <span class="mute">(${pn(n.place)})</span>`:""}</span></div>`).join("")}</div>`:""}
- <div class="card"><div class="row" style="justify-content:space-between"><b>Timeline</b><div class="row"><button class="g ${rowMode==="cars"?"on":""}" data-a="rows" data-m="cars">Cars</button><button class="g ${rowMode==="people"?"on":""}" data-a="rows" data-m="people">People</button></div></div>${leg}${rowMode==="people"&&!S.people.length?'<div class="mute" style="padding:8px 0">Add people in Setup, then assign them to trips.</div>':gantt(rows,d0,d1)}</div>
+ <div class="card"><div class="row" style="justify-content:space-between"><b>Timeline</b><div class="row"><button class="g ${rowMode==="runs"?"on":""}" data-a="rows" data-m="runs">Runs</button><button class="g ${rowMode==="cars"?"on":""}" data-a="rows" data-m="cars">Cars</button><button class="g ${rowMode==="people"?"on":""}" data-a="rows" data-m="people">People</button><button class="g" data-a="tl-zoom" data-d="-1" aria-label="Zoom out the timeline">−</button><button class="g" data-a="tl-zoom" data-d="1" aria-label="Zoom in the timeline">+</button></div></div>${leg}${rowMode==="people"&&!S.people.length?'<div class="mute" style="padding:8px 0">Add people in Setup, then assign them to trips.</div>':gantt(rows,d0,d1,{bands:rowMode==="people"?hw:null,lw:rowMode==="runs"?250:92})}</div>
  ${iss.length?`<div class="card"><b>Issues</b>${iss.map(i=>`<button class="warn iss" data-a="sel-trip" data-id="${i.t.id}">${tm(i.t.dep)}, ${rlabel(i.t)}: ${i.x}</button>`).join("")}</div>`:""}
  ${runsHTML(ts)}`}
 
@@ -453,6 +463,7 @@ document.addEventListener("click",e=>{
  if(a==="del-run"){const t0=by(S.trips,id);if(!t0)return;if(!ask("r"+id,"Delete this whole run?"))return;const ids=runIdsOf(t0);S.trips=S.trips.filter(x=>!ids.includes(x.id));selId=""}
  if(a==="del-trip"){if(!ask("t"+id,"Remove this car from the run?"))return;S.trips=S.trips.filter(x=>x.id!==id);selId=""}
  if(a==="edit-notes"){OPEN.add("notes");setupOpen=true;render();return}
+ if(a==="tl-zoom"){const Z=[60,80,120,160,220,300,420];let i=Z.indexOf(PPH);if(i<0)i=2;PPH=Z[Math.max(0,Math.min(Z.length-1,i+(+t.dataset.d)))];render();return}
  if(a==="undo"){const j=undoStack.pop();if(j){S=JSON.parse(j);fixSet();selId="";toast("Restored.")}}
  if(a==="add-park-day"){addParkingRuns([curDay])}
  if(a==="add-park-all"){addParkingRuns(Array.from({length:S.set.days},(_,i)=>i))}
