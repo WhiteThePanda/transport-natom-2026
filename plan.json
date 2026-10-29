@@ -120,16 +120,18 @@
   {
    "id": "w6smrp",
    "name": "OKQ8 Bil",
-   "seats": 2,
+   "seats": 3,
    "cargo": 8,
-   "from": "4unfei"
+   "from": "4unfei",
+   "capacity": "11m3"
   },
   {
    "id": "0j2jiy",
    "name": "THS Car (EUY731)",
-   "seats": 3,
+   "seats": 2,
    "cargo": 0,
-   "from": ""
+   "from": "",
+   "capacity": "1,9m3"
   }
  ],
  "people": [
@@ -160,6 +162,26 @@
   {
    "id": "kgriiu",
    "name": "PhinsQuen"
+  },
+  {
+   "id": "5to0rk",
+   "name": "Baba"
+  },
+  {
+   "id": "cg5ruq",
+   "name": "Vera"
+  },
+  {
+   "id": "o2mm92",
+   "name": "T-Röd"
+  },
+  {
+   "id": "13z54h",
+   "name": "IDK"
+  },
+  {
+   "id": "zkxuzz",
+   "name": "Orangette"
   }
  ],
  "img": null,
@@ -176,7 +198,7 @@
   "sheet": "https://docs.google.com/spreadsheets/d/1fGI9atySvjQbWm0rvJxcjpg-AvNQVgrVmnO5W3Ss3V0/edit?usp=sharing",
   "parkWait": 30,
   "parking": "54gi0d",
-  "lastSync": 1793302925294,
+  "lastSync": 1793305918380,
   "tileSrc": "esri"
  },
  "trips": [
