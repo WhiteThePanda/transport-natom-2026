@@ -198,8 +198,10 @@
   "sheet": "https://docs.google.com/spreadsheets/d/1fGI9atySvjQbWm0rvJxcjpg-AvNQVgrVmnO5W3Ss3V0/edit?usp=sharing",
   "parkWait": 30,
   "parking": "54gi0d",
-  "lastSync": 1793305918380,
-  "tileSrc": "esri"
+  "lastSync": 1793349260649,
+  "tileSrc": "esri",
+  "loadMin": 20,
+  "unloadMin": 20
  },
  "trips": [
   {
@@ -230,12 +232,16 @@
    "riders": [],
    "pack": [],
    "unpack": [],
-   "packMin": 20,
+   "packMin": 0,
    "unpackMin": 20,
    "load": 0,
    "note": "Retuperän arrives, stuff to MF",
    "standin": "",
-   "arrAt": 1794561000000
+   "arrAt": 1794561000000,
+   "loadZone": "",
+   "unloadZone": "",
+   "startKind": "load",
+   "endKind": "load"
   },
   {
    "id": "pa4h1b",
@@ -252,7 +258,7 @@
    "unpackMin": 20,
    "load": 0,
    "note": "Only necessary if we have stuff to move from Instrument storage KTH",
-   "standin": ""
+   "standin": "kgriiu"
   },
   {
    "id": "hyrwar",
@@ -337,7 +343,7 @@
    "unpackMin": 20,
    "load": 0,
    "note": "People take their instruments but there will be instruments left probably after this and we absolutely need to empty Aula",
-   "standin": ""
+   "standin": "kgriiu"
   },
   {
    "id": "3tlxsu",
@@ -419,11 +425,15 @@
    "riders": [],
    "pack": [],
    "unpack": [],
-   "packMin": 20,
-   "unpackMin": 20,
+   "packMin": 0,
+   "unpackMin": 0,
    "load": 0,
    "note": "",
-   "standin": ""
+   "standin": "",
+   "loadZone": "",
+   "unloadZone": "",
+   "startKind": "load",
+   "endKind": "unload"
   },
   {
    "id": "k3lz23",
@@ -437,11 +447,15 @@
    "riders": [],
    "pack": [],
    "unpack": [],
-   "packMin": 20,
-   "unpackMin": 20,
+   "packMin": 0,
+   "unpackMin": 0,
    "load": 0,
    "note": "",
-   "standin": ""
+   "standin": "",
+   "loadZone": "",
+   "unloadZone": "",
+   "startKind": "load",
+   "endKind": "unload"
   },
   {
    "id": "q5lf9y",
@@ -471,16 +485,20 @@
    "riders": [],
    "pack": [],
    "unpack": [],
-   "packMin": 20,
+   "packMin": 0,
    "unpackMin": 20,
    "load": 0,
    "note": "Retuperän arrives, stuff to MF",
    "standin": "",
-   "arrAt": 1794561000000
+   "arrAt": 1794561000000,
+   "loadZone": "",
+   "unloadZone": "",
+   "startKind": "load",
+   "endKind": "load"
   },
   {
    "id": "wnmh34",
-   "dep": 1794564000000,
+   "dep": 1794562200000,
    "car": "ggzzid",
    "from": "q7owga",
    "to": "o8roq7",
@@ -489,15 +507,19 @@
    "riders": [],
    "pack": [],
    "unpack": [],
-   "packMin": 20,
+   "packMin": 0,
    "unpackMin": 20,
    "load": 0,
    "note": "Retuperän arrives, stuff to MF. Then, we basically have the whole day to move stuff until the evening gigs since there is no afternoon gig.",
-   "standin": ""
+   "standin": "",
+   "loadZone": "",
+   "unloadZone": "",
+   "startKind": "load",
+   "endKind": "unload"
   },
   {
    "id": "tvkzpv",
-   "dep": 1794564000000,
+   "dep": 1794562200000,
    "car": "w6smrp",
    "from": "q7owga",
    "to": "o8roq7",
@@ -506,11 +528,15 @@
    "riders": [],
    "pack": [],
    "unpack": [],
-   "packMin": 20,
+   "packMin": 0,
    "unpackMin": 20,
    "load": 0,
    "note": "Retuperän arrives, stuff to MF. Then, we basically have the whole day to move stuff until the evening gigs since there is no afternoon gig.",
-   "standin": ""
+   "standin": "",
+   "loadZone": "",
+   "unloadZone": "",
+   "startKind": "load",
+   "endKind": "unload"
   },
   {
    "id": "6yh0z3",
@@ -527,7 +553,7 @@
    "unpackMin": 20,
    "load": 0,
    "note": "Only necessary if we have stuff to move from Instrument storage KTH",
-   "standin": ""
+   "standin": "kgriiu"
   },
   {
    "id": "15f3vw",
@@ -553,7 +579,7 @@
    "from": "q7owga",
    "to": "b7uydu",
    "min": 0,
-   "driver": "",
+   "driver": "kgriiu",
    "riders": [],
    "pack": [],
    "unpack": [],
@@ -570,33 +596,41 @@
    "from": "b7uydu",
    "to": "q7owga",
    "min": 0,
-   "driver": "",
+   "driver": "kgriiu",
    "riders": [],
    "pack": [],
    "unpack": [],
-   "packMin": 20,
+   "packMin": 0,
    "unpackMin": 20,
    "load": 0,
    "note": "Retuperän arrives, stuff to MF",
    "standin": "",
-   "arrAt": 1794561000000
+   "arrAt": 1794561000000,
+   "loadZone": "",
+   "unloadZone": "",
+   "startKind": "load",
+   "endKind": "load"
   },
   {
    "id": "9b2za5",
-   "dep": 1794564000000,
+   "dep": 1794562200000,
    "car": "0j2jiy",
    "from": "q7owga",
    "to": "o8roq7",
    "min": 0,
-   "driver": "",
+   "driver": "kgriiu",
    "riders": [],
    "pack": [],
    "unpack": [],
-   "packMin": 20,
+   "packMin": 0,
    "unpackMin": 20,
    "load": 0,
    "note": "Retuperän arrives, stuff to MF. Then, we basically have the whole day to move stuff until the evening gigs since there is no afternoon gig.",
-   "standin": ""
+   "standin": "",
+   "loadZone": "",
+   "unloadZone": "",
+   "startKind": "load",
+   "endKind": "unload"
   },
   {
    "id": "dp8gqp",
@@ -613,7 +647,7 @@
    "unpackMin": 20,
    "load": 0,
    "note": "Only necessary if we have stuff to move from Instrument storage KTH",
-   "standin": ""
+   "standin": "kgriiu"
   },
   {
    "id": "yz20m7",
@@ -664,7 +698,7 @@
    "unpackMin": 20,
    "load": 0,
    "note": "People take their instruments but there will be instruments left probably after this and we absolutely need to empty Aula",
-   "standin": ""
+   "standin": "kgriiu"
   },
   {
    "id": "hya13y",
@@ -698,7 +732,7 @@
    "unpackMin": 20,
    "load": 0,
    "note": "People take their instruments but there will be instruments left probably after this and we absolutely need to empty Aula",
-   "standin": ""
+   "standin": "kgriiu"
   }
  ],
  "notes": [
