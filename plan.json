@@ -2,11 +2,11 @@
  "places": [
   {
    "id": "b7uydu",
-   "name": "Instrument storage KTH",
+   "name": "KTH Campus",
    "kind": "Storage",
-   "addr": "KTH campus, Stockholm",
-   "lat": 59.3498,
-   "lng": 18.0707
+   "addr": "59.34735806623776, 18.07075589520169",
+   "lat": 59.34723,
+   "lng": 18.07043
   },
   {
    "id": "z3x9a3",
@@ -93,12 +93,12 @@
    "id": "8ijhtw",
    "name": "Borggården",
    "kind": "Venue",
-   "addr": "114 28 Stockholm",
+   "addr": "Drottning Kristinas väg 4",
    "flex": false,
    "parent": "b7uydu",
    "hide": false,
-   "lat": 59.34961,
-   "lng": 18.07005
+   "lat": 59.347600415945735,
+   "lng": 18.073811378322535
   },
   {
    "id": "dq3n6j",
@@ -113,7 +113,7 @@
   {
    "id": "ggzzid",
    "name": "Data Van",
-   "seats": 3,
+   "seats": 2,
    "cargo": 8,
    "from": "ncd1lg"
   },
@@ -198,7 +198,7 @@
   "sheet": "https://docs.google.com/spreadsheets/d/1fGI9atySvjQbWm0rvJxcjpg-AvNQVgrVmnO5W3Ss3V0/edit?usp=sharing",
   "parkWait": 30,
   "parking": "54gi0d",
-  "lastSync": 1793462171669,
+  "lastSync": 1793463959579,
   "tileSrc": "esri",
   "loadMin": 20,
   "unloadMin": 20
@@ -223,7 +223,7 @@
   },
   {
    "id": "pmrk58",
-   "dep": 1794559800000,
+   "dep": 1794559920000,
    "car": "ggzzid",
    "from": "b7uydu",
    "to": "q7owga",
@@ -422,7 +422,7 @@
    "car": "ggzzid",
    "from": "ncd1lg",
    "to": "q7owga",
-   "dep": 1794548400000,
+   "dep": 1794548520000,
    "arrAt": 1794549600000,
    "min": 0,
    "driver": "",
@@ -480,7 +480,7 @@
   },
   {
    "id": "924p62",
-   "dep": 1794559800000,
+   "dep": 1794559920000,
    "car": "w6smrp",
    "from": "b7uydu",
    "to": "q7owga",
@@ -599,7 +599,7 @@
   },
   {
    "id": "bhfy95",
-   "dep": 1794559800000,
+   "dep": 1794559920000,
    "car": "0j2jiy",
    "from": "b7uydu",
    "to": "q7owga",
