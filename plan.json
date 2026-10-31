@@ -198,7 +198,7 @@
   "sheet": "https://docs.google.com/spreadsheets/d/1fGI9atySvjQbWm0rvJxcjpg-AvNQVgrVmnO5W3Ss3V0/edit?usp=sharing",
   "parkWait": 30,
   "parking": "54gi0d",
-  "lastSync": 1793463959579,
+  "lastSync": 1793464233671,
   "tileSrc": "esri",
   "loadMin": 20,
   "unloadMin": 20
@@ -825,6 +825,38 @@
    "at": 1794499200000,
    "text": "OP picks up the THS van",
    "place": "dq3n6j"
+  }
+ ],
+ "info": [
+  {
+   "id": "tkg5lh",
+   "title": "Be sober",
+   "text": "Be sober when you drive. Drivers and stand-ins must stay sober."
+  },
+  {
+   "id": "kzpwwf",
+   "title": "Where the papers are",
+   "text": "To be filled in."
+  },
+  {
+   "id": "2ml8l8",
+   "title": "Parking",
+   "text": "Pick your own parking spot when you need to park. Parking is refunded."
+  },
+  {
+   "id": "c2qyyo",
+   "title": "Unloading zones",
+   "text": "Loading and unloading zones are provided for informative purposes but you might need to adapt if real-life doesn't allow to use those. In that case, find a suitable spot yourself "
+  },
+  {
+   "id": "9g9not",
+   "title": "OKQ8 rental",
+   "text": "Only people that are legally signed to drive the rental cars can drive the rental cars"
+  },
+  {
+   "id": "zysm55",
+   "title": "Emergency/issues/questions",
+   "text": "Contact Orangette on Signal, call or text"
   }
  ]
 }
