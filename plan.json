@@ -198,10 +198,11 @@
   "sheet": "https://docs.google.com/spreadsheets/d/1fGI9atySvjQbWm0rvJxcjpg-AvNQVgrVmnO5W3Ss3V0/edit?usp=sharing",
   "parkWait": 30,
   "parking": "54gi0d",
-  "lastSync": 1793464233671,
+  "lastSync": 1793464352721,
   "tileSrc": "esri",
   "loadMin": 20,
-  "unloadMin": 20
+  "unloadMin": 20,
+  "title": "Transport planner NATOM 2026 by Orangette"
  },
  "trips": [
   {
