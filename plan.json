@@ -31,8 +31,8 @@
    "name": "MF (Medicinska Föreningen)",
    "kind": "Venue",
    "addr": "Nobels väg 10, 171 65 Solna",
-   "lat": 59.35,
-   "lng": 18.0262
+   "lat": 59.34847,
+   "lng": 18.02666
   },
   {
    "id": "o8roq7",
@@ -198,7 +198,7 @@
   "sheet": "https://docs.google.com/spreadsheets/d/1fGI9atySvjQbWm0rvJxcjpg-AvNQVgrVmnO5W3Ss3V0/edit?usp=sharing",
   "parkWait": 30,
   "parking": "54gi0d",
-  "lastSync": 1793464352721,
+  "lastSync": 1793464800841,
   "tileSrc": "esri",
   "loadMin": 20,
   "unloadMin": 20,
