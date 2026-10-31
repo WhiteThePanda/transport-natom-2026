@@ -198,7 +198,7 @@
   "sheet": "https://docs.google.com/spreadsheets/d/1fGI9atySvjQbWm0rvJxcjpg-AvNQVgrVmnO5W3Ss3V0/edit?usp=sharing",
   "parkWait": 30,
   "parking": "54gi0d",
-  "lastSync": 1793349260649,
+  "lastSync": 1793462171669,
   "tileSrc": "esri",
   "loadMin": 20,
   "unloadMin": 20
@@ -381,7 +381,7 @@
   },
   {
    "id": "e95t9g",
-   "dep": 1794765600000,
+   "dep": 1794762000000,
    "car": "w6smrp",
    "from": "q7owga",
    "to": "4unfei",
@@ -390,11 +390,15 @@
    "riders": [],
    "pack": [],
    "unpack": [],
-   "packMin": 20,
-   "unpackMin": 20,
+   "packMin": 0,
+   "unpackMin": 0,
    "load": 0,
    "note": "Return cars after the drop-off",
-   "standin": ""
+   "standin": "",
+   "loadZone": "",
+   "unloadZone": "",
+   "startKind": "load",
+   "endKind": "unload"
   },
   {
    "id": "1hojnq",
@@ -560,17 +564,21 @@
    "car": "ggzzid",
    "from": "q7owga",
    "to": "ncd1lg",
-   "dep": 1794765600000,
+   "dep": 1794762000000,
    "min": 0,
    "driver": "",
    "riders": [],
    "pack": [],
    "unpack": [],
-   "packMin": 20,
-   "unpackMin": 20,
+   "packMin": 0,
+   "unpackMin": 0,
    "load": 0,
    "note": "Return cars after the drop off",
-   "standin": ""
+   "standin": "",
+   "loadZone": "",
+   "unloadZone": "",
+   "startKind": "load",
+   "endKind": "unload"
   },
   {
    "id": "kwp54u",
@@ -705,17 +713,21 @@
    "car": "0j2jiy",
    "from": "q7owga",
    "to": "dq3n6j",
-   "dep": 1794765600000,
+   "dep": 1794762000000,
    "min": 0,
    "driver": "",
    "riders": [],
    "pack": [],
    "unpack": [],
-   "packMin": 20,
-   "unpackMin": 20,
+   "packMin": 0,
+   "unpackMin": 0,
    "load": 0,
    "note": "Return cars after the drop off",
-   "standin": ""
+   "standin": "",
+   "loadZone": "",
+   "unloadZone": "",
+   "startKind": "load",
+   "endKind": "unload"
   },
   {
    "id": "0wjhm0",
@@ -776,7 +788,7 @@
    "id": "o9prk0",
    "at": 1794643200000,
    "text": "MF instrument storage to Borggården",
-   "place": "uq34nv"
+   "place": "8ijhtw"
   },
   {
    "id": "xj6j19",
@@ -799,7 +811,7 @@
   {
    "id": "y77rgo",
    "at": 1794769200000,
-   "text": "Give cars back in the evening, after the Finns are dropped at the ferry. OKQ8 or Datasektionen parking spot",
+   "text": "(Flexible time) Give cars back in the evening, after the Finns are dropped at the ferry. OKQ8 or Datasektionen parking spot",
    "place": ""
   },
   {
