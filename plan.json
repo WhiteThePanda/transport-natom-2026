@@ -232,7 +232,7 @@
   },
   {
    "id": "pmrk58",
-   "dep": 1794559920000,
+   "dep": 1794560460000,
    "car": "ggzzid",
    "from": "b7uydu",
    "to": "q7owga",
@@ -431,7 +431,7 @@
    "car": "ggzzid",
    "from": "ncd1lg",
    "to": "q7owga",
-   "dep": 1794548520000,
+   "dep": 1794549060000,
    "arrAt": 1794549600000,
    "min": 0,
    "driver": "382tfm",
@@ -489,7 +489,7 @@
   },
   {
    "id": "924p62",
-   "dep": 1794559920000,
+   "dep": 1794560460000,
    "car": "w6smrp",
    "from": "b7uydu",
    "to": "q7owga",
@@ -608,7 +608,7 @@
   },
   {
    "id": "bhfy95",
-   "dep": 1794559920000,
+   "dep": 1794560460000,
    "car": "0j2jiy",
    "from": "b7uydu",
    "to": "q7owga",
@@ -834,6 +834,12 @@
    "at": 1794499200000,
    "text": "OP picks up the THS van",
    "place": "dq3n6j"
+  },
+  {
+   "id": "usxce2",
+   "at": 1794571200000,
+   "text": "(after all instruments have been moved to MF) SiN returns CERISE",
+   "place": "ncd1lg"
   }
  ],
  "info": [
@@ -850,7 +856,7 @@
   {
    "id": "2ml8l8",
    "title": "Parking",
-   "text": "Pick your own parking spot when you need to park. Parking is refunded."
+   "text": "Pick your own spot. Parking is refunded."
   },
   {
    "id": "c2qyyo",
@@ -866,6 +872,13 @@
    "id": "zysm55",
    "title": "Emergency/issues/questions",
    "text": "Contact Orangette on Signal, call or text"
+  }
+ ],
+ "warns": [
+  {
+   "id": "16hpun",
+   "day": 2,
+   "text": "Lunch: we drive during the lunch break. Eat before you start."
   }
  ]
 }
