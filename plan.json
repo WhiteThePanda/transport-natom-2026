@@ -112,10 +112,18 @@
  "cars": [
   {
    "id": "ggzzid",
-   "name": "Data Van",
+   "name": "Data Van (CERISE)",
    "seats": 2,
    "cargo": 8,
-   "from": "ncd1lg"
+   "from": "ncd1lg",
+   "days": {
+    "2": {
+     "seats": 3,
+     "capacity": "11m3",
+     "name": "OKQ8 rental (small)"
+    }
+   },
+   "capacity": "5,2m3"
   },
   {
    "id": "w6smrp",
@@ -123,7 +131,7 @@
    "seats": 3,
    "cargo": 8,
    "from": "4unfei",
-   "capacity": "11m3"
+   "capacity": "14m3"
   },
   {
    "id": "0j2jiy",
@@ -198,7 +206,7 @@
   "sheet": "https://docs.google.com/spreadsheets/d/1fGI9atySvjQbWm0rvJxcjpg-AvNQVgrVmnO5W3Ss3V0/edit?usp=sharing",
   "parkWait": 30,
   "parking": "54gi0d",
-  "lastSync": 1793464800841,
+  "lastSync": 1793642300838,
   "tileSrc": "esri",
   "loadMin": 20,
   "unloadMin": 20,
@@ -268,7 +276,7 @@
    "from": "o8roq7",
    "to": "8ijhtw",
    "min": 20,
-   "driver": "",
+   "driver": "xvuo5y",
    "riders": [],
    "pack": [],
    "unpack": [],
@@ -302,7 +310,7 @@
    "from": "8ijhtw",
    "to": "o8roq7",
    "min": 20,
-   "driver": "",
+   "driver": "xvuo5y",
    "riders": [],
    "pack": [],
    "unpack": [],
@@ -426,7 +434,7 @@
    "dep": 1794548520000,
    "arrAt": 1794549600000,
    "min": 0,
-   "driver": "",
+   "driver": "382tfm",
    "riders": [],
    "pack": [],
    "unpack": [],
@@ -508,7 +516,7 @@
    "from": "q7owga",
    "to": "o8roq7",
    "min": 0,
-   "driver": "",
+   "driver": "xvuo5y",
    "riders": [],
    "pack": [],
    "unpack": [],
