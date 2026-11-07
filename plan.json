@@ -79,7 +79,8 @@
    "kind": "Parking",
    "addr": "",
    "flex": true,
-   "info": "Park anywhere. Parking is refunded."
+   "info": "Park anywhere. Parking is refunded.",
+   "zones": []
   },
   {
    "id": "ncd1lg",
@@ -107,6 +108,15 @@
    "addr": "",
    "flex": false,
    "parent": "b7uydu"
+  },
+  {
+   "id": "mfq5gh",
+   "name": "OKQ8 (Kungshamra)",
+   "kind": "Storage",
+   "addr": "Kungshamravägen 1, 170 70 Solna",
+   "flex": false,
+   "lat": 59.38006,
+   "lng": 18.02556
   }
  ],
  "cars": [
@@ -206,7 +216,7 @@
   "sheet": "https://docs.google.com/spreadsheets/d/1fGI9atySvjQbWm0rvJxcjpg-AvNQVgrVmnO5W3Ss3V0/edit?usp=sharing",
   "parkWait": 30,
   "parking": "54gi0d",
-  "lastSync": 1793642300838,
+  "lastSync": 1794048948148,
   "tileSrc": "esri",
   "loadMin": 20,
   "unloadMin": 20,
@@ -232,7 +242,7 @@
   },
   {
    "id": "pmrk58",
-   "dep": 1794560460000,
+   "dep": 1794559920000,
    "car": "ggzzid",
    "from": "b7uydu",
    "to": "q7owga",
@@ -271,8 +281,30 @@
   },
   {
    "id": "hyrwar",
-   "dep": 1794643200000,
+   "dep": 1794642420000,
    "car": "ggzzid",
+   "from": "o8roq7",
+   "to": "8ijhtw",
+   "min": 20,
+   "driver": "kgriiu",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 20,
+   "unpackMin": 20,
+   "load": 0,
+   "note": "Get your car to Aulan then go from MF storage to Borggården",
+   "standin": "xnobrw",
+   "arrAt": 1794643200000,
+   "loadZone": "",
+   "unloadZone": "",
+   "startKind": "load",
+   "endKind": "unload"
+  },
+  {
+   "id": "x6d0z7",
+   "dep": 1794642420000,
+   "car": "w6smrp",
    "from": "o8roq7",
    "to": "8ijhtw",
    "min": 20,
@@ -284,24 +316,12 @@
    "unpackMin": 20,
    "load": 0,
    "note": "Get your car to Aulan then go from MF storage to Borggården",
-   "standin": ""
-  },
-  {
-   "id": "x6d0z7",
-   "dep": 1794643200000,
-   "car": "w6smrp",
-   "from": "o8roq7",
-   "to": "8ijhtw",
-   "min": 20,
-   "driver": "",
-   "riders": [],
-   "pack": [],
-   "unpack": [],
-   "packMin": 20,
-   "unpackMin": 20,
-   "load": 0,
-   "note": "Get your car to Aulan then go from MF storage to Borggården",
-   "standin": ""
+   "standin": "xnobrw",
+   "arrAt": 1794643200000,
+   "loadZone": "",
+   "unloadZone": "",
+   "startKind": "load",
+   "endKind": "unload"
   },
   {
    "id": "uhtd56",
@@ -310,7 +330,7 @@
    "from": "8ijhtw",
    "to": "o8roq7",
    "min": 20,
-   "driver": "xvuo5y",
+   "driver": "rvpzr7",
    "riders": [],
    "pack": [],
    "unpack": [],
@@ -318,7 +338,7 @@
    "unpackMin": 20,
    "load": 0,
    "note": "Back to MF storage, then park your car",
-   "standin": ""
+   "standin": "xnobrw"
   },
   {
    "id": "5agc8k",
@@ -327,7 +347,7 @@
    "from": "8ijhtw",
    "to": "o8roq7",
    "min": 20,
-   "driver": "",
+   "driver": "6gewqu",
    "riders": [],
    "pack": [],
    "unpack": [],
@@ -335,7 +355,7 @@
    "unpackMin": 20,
    "load": 0,
    "note": "Back to MF storage, then park your car",
-   "standin": ""
+   "standin": "xnobrw"
   },
   {
    "id": "d1shzy",
@@ -378,7 +398,7 @@
    "from": "pxpis4",
    "to": "q7owga",
    "min": 0,
-   "driver": "",
+   "driver": "6gewqu",
    "riders": [],
    "pack": [],
    "unpack": [],
@@ -395,7 +415,7 @@
    "from": "q7owga",
    "to": "4unfei",
    "min": 20,
-   "driver": "",
+   "driver": "6gewqu",
    "riders": [],
    "pack": [],
    "unpack": [],
@@ -431,7 +451,7 @@
    "car": "ggzzid",
    "from": "ncd1lg",
    "to": "q7owga",
-   "dep": 1794549060000,
+   "dep": 1794548520000,
    "arrAt": 1794549600000,
    "min": 0,
    "driver": "382tfm",
@@ -489,7 +509,7 @@
   },
   {
    "id": "924p62",
-   "dep": 1794560460000,
+   "dep": 1794559920000,
    "car": "w6smrp",
    "from": "b7uydu",
    "to": "q7owga",
@@ -524,7 +544,7 @@
    "unpackMin": 20,
    "load": 0,
    "note": "Retuperän arrives, stuff to MF. Then, we basically have the whole day to move stuff until the evening gigs since there is no afternoon gig.",
-   "standin": "",
+   "standin": "kgriiu",
    "loadZone": "",
    "unloadZone": "",
    "startKind": "load",
@@ -545,7 +565,7 @@
    "unpackMin": 20,
    "load": 0,
    "note": "Retuperän arrives, stuff to MF. Then, we basically have the whole day to move stuff until the evening gigs since there is no afternoon gig.",
-   "standin": "",
+   "standin": "kgriiu",
    "loadZone": "",
    "unloadZone": "",
    "startKind": "load",
@@ -608,7 +628,7 @@
   },
   {
    "id": "bhfy95",
-   "dep": 1794560460000,
+   "dep": 1794559920000,
    "car": "0j2jiy",
    "from": "b7uydu",
    "to": "q7owga",
@@ -635,7 +655,7 @@
    "from": "q7owga",
    "to": "o8roq7",
    "min": 0,
-   "driver": "kgriiu",
+   "driver": "xnobrw",
    "riders": [],
    "pack": [],
    "unpack": [],
@@ -643,7 +663,7 @@
    "unpackMin": 20,
    "load": 0,
    "note": "Retuperän arrives, stuff to MF. Then, we basically have the whole day to move stuff until the evening gigs since there is no afternoon gig.",
-   "standin": "",
+   "standin": "kgriiu",
    "loadZone": "",
    "unloadZone": "",
    "startKind": "load",
@@ -668,12 +688,12 @@
   },
   {
    "id": "yz20m7",
-   "dep": 1794643200000,
+   "dep": 1794642420000,
    "car": "0j2jiy",
    "from": "o8roq7",
    "to": "8ijhtw",
    "min": 20,
-   "driver": "",
+   "driver": "rvpzr7",
    "riders": [],
    "pack": [],
    "unpack": [],
@@ -681,7 +701,12 @@
    "unpackMin": 20,
    "load": 0,
    "note": "Get your car to Aulan then go from MF storage to Borggården",
-   "standin": ""
+   "standin": "xnobrw",
+   "arrAt": 1794643200000,
+   "loadZone": "",
+   "unloadZone": "",
+   "startKind": "load",
+   "endKind": "unload"
   },
   {
    "id": "th3lu8",
@@ -690,7 +715,7 @@
    "from": "8ijhtw",
    "to": "o8roq7",
    "min": 20,
-   "driver": "",
+   "driver": "xvuo5y",
    "riders": [],
    "pack": [],
    "unpack": [],
@@ -698,7 +723,7 @@
    "unpackMin": 20,
    "load": 0,
    "note": "Back to MF storage, then park your car",
-   "standin": ""
+   "standin": "xnobrw"
   },
   {
    "id": "mklamw",
@@ -724,7 +749,7 @@
    "to": "dq3n6j",
    "dep": 1794762000000,
    "min": 0,
-   "driver": "",
+   "driver": "xnobrw",
    "riders": [],
    "pack": [],
    "unpack": [],
@@ -766,7 +791,7 @@
   {
    "id": "2ktac7",
    "at": 1794549600000,
-   "text": "Ferry arrives, Bus and our three cars arrives for 7:00. Instruments go to KTH storage. Instruments can stay in the car if needed and there is enough space to take Retuperan's stuff later, otherwise empty the car. We don't have a Friday afternoon gig.",
+   "text": "PQ  Bus arrives for 7:00 and we pack. Instruments go to KTH storage and we unpack. Instruments can stay in the car if needed and there is enough space to take Retuperan's stuff later, otherwise empty the car. We don't have a Friday afternoon gig.",
    "place": "q7owga"
   },
   {
@@ -796,7 +821,7 @@
   {
    "id": "o9prk0",
    "at": 1794643200000,
-   "text": "MF instrument storage to Borggården",
+   "text": "MF instrument storage to Borggården (rigging stuff must be here by 9, so start earlier)",
    "place": "8ijhtw"
   },
   {
@@ -840,6 +865,18 @@
    "at": 1794571200000,
    "text": "(after all instruments have been moved to MF) SiN returns CERISE",
    "place": "ncd1lg"
+  },
+  {
+   "id": "nshz0z",
+   "at": 1794641400000,
+   "text": "PhinsQuen picks up Cerise-replacement van",
+   "place": "mfq5gh"
+  },
+  {
+   "id": "7dwds5",
+   "at": 1794727800000,
+   "text": "PhinsQuen returns Cerise-replacement van",
+   "place": "mfq5gh"
   }
  ],
  "info": [
@@ -851,7 +888,7 @@
   {
    "id": "kzpwwf",
    "title": "Where the papers are",
-   "text": "To be filled in."
+   "text": "In the car. Don't forget to always have your driving license with you."
   },
   {
    "id": "2ml8l8",
