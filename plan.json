@@ -270,7 +270,7 @@
   "sheet": "https://docs.google.com/spreadsheets/d/1fGI9atySvjQbWm0rvJxcjpg-AvNQVgrVmnO5W3Ss3V0/edit?usp=sharing",
   "parkWait": 30,
   "parking": "54gi0d",
-  "lastSync": 1794251443353,
+  "lastSync": 1794252344067,
   "tileSrc": "esri",
   "loadMin": 20,
   "unloadMin": 20,
@@ -811,8 +811,8 @@
   },
   {
    "id": "un7xm6",
-   "at": 1794574800000,
-   "text": "Alliancen arrive by bus (time told, unconfirmed), likely park close to KTH campus. They should come to MF to drop their instruments, we will help them unpack.",
+   "at": 1794582000000,
+   "text": "(Prel. time) Balliancen arrives by bus, 1. receive them at MF to unpack their instrument. 2. Receive them at KTH to unpack their stuff.",
    "place": "iy87ww"
   },
   {
