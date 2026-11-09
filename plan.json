@@ -6,7 +6,15 @@
    "kind": "Storage",
    "addr": "59.34735806623776, 18.07075589520169",
    "lat": 59.34723,
-   "lng": 18.07043
+   "lng": 18.07043,
+   "zones": [
+    {
+     "id": "6x9xlu",
+     "name": "Test",
+     "use": "both",
+     "note": "Test"
+    }
+   ]
   },
   {
    "id": "z3x9a3",
@@ -216,7 +224,7 @@
   "sheet": "https://docs.google.com/spreadsheets/d/1fGI9atySvjQbWm0rvJxcjpg-AvNQVgrVmnO5W3Ss3V0/edit?usp=sharing",
   "parkWait": 30,
   "parking": "54gi0d",
-  "lastSync": 1794177161301,
+  "lastSync": 1794250212219,
   "tileSrc": "esri",
   "loadMin": 20,
   "unloadMin": 20,
@@ -714,7 +722,7 @@
    "from": "pxpis4",
    "to": "q7owga",
    "min": 0,
-   "driver": "",
+   "driver": "kgriiu",
    "riders": [],
    "pack": [],
    "unpack": [],
@@ -864,6 +872,11 @@
    "id": "zysm55",
    "title": "Emergency/issues/questions",
    "text": "Contact Orangette on Signal, call or text"
+  },
+  {
+   "id": "g67wbl",
+   "title": "Transport color scheme for Orchestras made by PhinsQuen",
+   "text": "https://docs.google.com/spreadsheets/d/1iemB4Z4YeHY0hLGdr98SPfIdk7WmXPXfYcOe2eWL8CA"
   }
  ],
  "warns": [
