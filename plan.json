@@ -9,10 +9,36 @@
    "lng": 18.07043,
    "zones": [
     {
-     "id": "6x9xlu",
-     "name": "Test",
-     "use": "both",
-     "note": "Test"
+     "id": "824ly0",
+     "name": "Nymble, front",
+     "use": "park",
+     "lat": 59.34767,
+     "lng": 18.070678,
+     "note": "Other cars: use if free, otherwise the road parking.",
+     "count": 3,
+     "carNotes": {
+      "0j2jiy": "Free for the THS car. All 8 spots (3 front, 5 back) should be free."
+     }
+    },
+    {
+     "id": "ossesn",
+     "name": "Nymble, back",
+     "use": "park",
+     "lat": 59.347477,
+     "lng": 18.069697,
+     "note": "Other cars: use if free, otherwise the road parking.",
+     "count": 5,
+     "carNotes": {
+      "0j2jiy": "Free for the THS car. All 8 spots (3 front, 5 back) should be free."
+     }
+    },
+    {
+     "id": "xp9td3",
+     "name": "Road parking",
+     "use": "park",
+     "lat": 59.347143,
+     "lng": 18.071513,
+     "note": "Other cars: use if the Nymble spots are taken."
     }
    ]
   },
@@ -40,7 +66,17 @@
    "kind": "Venue",
    "addr": "Nobels väg 10, 171 65 Solna",
    "lat": 59.34847,
-   "lng": 18.02666
+   "lng": 18.02666,
+   "zones": [
+    {
+     "id": "p1qr9s",
+     "name": "Behind MF",
+     "use": "park",
+     "lat": 59.348261,
+     "lng": 18.026558,
+     "note": "Parking spots behind MF. There is space to park vans."
+    }
+   ]
   },
   {
    "id": "o8roq7",
@@ -107,7 +143,17 @@
    "parent": "b7uydu",
    "hide": false,
    "lat": 59.347600415945735,
-   "lng": 18.073811378322535
+   "lng": 18.073811378322535,
+   "zones": [
+    {
+     "id": "g3r52y",
+     "name": "Lindstedtsvägen",
+     "use": "park",
+     "lat": 59.347294,
+     "lng": 18.074874,
+     "note": "Best option for the Borggården gig."
+    }
+   ]
   },
   {
    "id": "dq3n6j",
@@ -224,7 +270,7 @@
   "sheet": "https://docs.google.com/spreadsheets/d/1fGI9atySvjQbWm0rvJxcjpg-AvNQVgrVmnO5W3Ss3V0/edit?usp=sharing",
   "parkWait": 30,
   "parking": "54gi0d",
-  "lastSync": 1794250212219,
+  "lastSync": 1794251443353,
   "tileSrc": "esri",
   "loadMin": 20,
   "unloadMin": 20,
