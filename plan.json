@@ -270,7 +270,7 @@
   "sheet": "https://docs.google.com/spreadsheets/d/1fGI9atySvjQbWm0rvJxcjpg-AvNQVgrVmnO5W3Ss3V0/edit?usp=sharing",
   "parkWait": 30,
   "parking": "54gi0d",
-  "lastSync": 1794252344067,
+  "lastSync": 1794253051408,
   "tileSrc": "esri",
   "loadMin": 20,
   "unloadMin": 20,
@@ -794,7 +794,7 @@
   {
    "id": "2ktac7",
    "at": 1794547800000,
-   "text": "PQ Bus arrives for 6:30 to pick up AB and we pack/unpack. Instruments go to KTH storage and we unpack. Instruments can stay in the car if needed and there is enough space to take Retuperan's stuff later, otherwise empty the car. We don't have a Friday afternoon gig.",
+   "text": "PQ Bus arrives for 6:30 to pick up AB and we pack/unpack. HumpsRumps bus goes directly to KTH and we help them unpack. Instruments go to KTH storage.",
    "place": "q7owga"
   },
   {
