@@ -280,7 +280,7 @@
   "sheet": "https://docs.google.com/spreadsheets/d/1fGI9atySvjQbWm0rvJxcjpg-AvNQVgrVmnO5W3Ss3V0/edit?usp=sharing",
   "parkWait": 30,
   "parking": "54gi0d",
-  "lastSync": 1794522400156,
+  "lastSync": 1794522789438,
   "tileSrc": "esri",
   "loadMin": 20,
   "unloadMin": 20,
@@ -944,7 +944,7 @@
    "id": "nshz0z",
    "at": 1794641400000,
    "text": "PhinsQuen picks up Cerise-replacement van",
-   "place": "mfq5gh"
+   "place": "4unfei"
   },
   {
    "id": "7dwds5",
@@ -966,7 +966,7 @@
   },
   {
    "id": "qxxh5b",
-   "at": 1794616200000,
+   "at": 1794702600000,
    "text": "PhinsQuen returns the car. SiN drives PhinsQuen back after they are done",
    "place": "4unfei"
   }
