@@ -75,6 +75,12 @@
      "lat": 59.348261,
      "lng": 18.026558,
      "note": "Parking spots behind MF. There is space to park vans."
+    },
+    {
+     "id": "kt6f7z",
+     "name": "Other spots",
+     "use": "park",
+     "note": "https://www.aimopark.se/stader/solna/karta-over-parkering-i-solna/"
     }
    ]
   },
@@ -111,11 +117,11 @@
   },
   {
    "id": "4unfei",
-   "name": "OKQ8 (address to determine)",
+   "name": "OKQ8 (Solna)",
    "kind": "Rental",
-   "addr": "Kungshamravägen 1, 170 70 Solna",
-   "lat": 59.38006,
-   "lng": 18.02556
+   "addr": "Hemvärnsgatan 1, Solna",
+   "lat": 59.35556,
+   "lng": 17.97636
   },
   {
    "id": "6jl0j5",
@@ -274,7 +280,7 @@
   "sheet": "https://docs.google.com/spreadsheets/d/1fGI9atySvjQbWm0rvJxcjpg-AvNQVgrVmnO5W3Ss3V0/edit?usp=sharing",
   "parkWait": 30,
   "parking": "54gi0d",
-  "lastSync": 1794521115437,
+  "lastSync": 1794522400156,
   "tileSrc": "esri",
   "loadMin": 20,
   "unloadMin": 20,
@@ -792,7 +798,7 @@
    "car": "0j2jiy",
    "from": "b7uydu",
    "to": "b7uydu",
-   "dep": 1794571260000,
+   "dep": 1794565800000,
    "loadZone": "",
    "unloadZone": "",
    "startKind": "load",
@@ -807,6 +813,46 @@
    "load": 0,
    "note": "Ulysse and IDK take the THS car and return it to campus.",
    "standin": "13z54h"
+  },
+  {
+   "id": "lfeo78",
+   "car": "ggzzid",
+   "from": "b7uydu",
+   "to": "4unfei",
+   "dep": 1794702600000,
+   "loadZone": "",
+   "unloadZone": "",
+   "startKind": "load",
+   "endKind": "unload",
+   "min": 0,
+   "driver": "kgriiu",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 0,
+   "unpackMin": 0,
+   "load": 0,
+   "note": "Return the car and drive PhinsQuen back"
+  },
+  {
+   "id": "pqkhrz",
+   "car": "0j2jiy",
+   "from": "b7uydu",
+   "to": "4unfei",
+   "dep": 1794702600000,
+   "loadZone": "",
+   "unloadZone": "",
+   "startKind": "load",
+   "endKind": "unload",
+   "min": 0,
+   "driver": "382tfm",
+   "riders": [],
+   "pack": [],
+   "unpack": [],
+   "packMin": 0,
+   "unpackMin": 0,
+   "load": 0,
+   "note": "Return the car and drive PhinsQuen back"
   }
  ],
  "notes": [
@@ -914,9 +960,15 @@
   },
   {
    "id": "3a5ra1",
-   "at": 1794571260000,
+   "at": 1794565800000,
    "text": "After all instruments have been moved to MF, Ulysse and IDK use the THS car for transporting alcohol",
    "place": "b7uydu"
+  },
+  {
+   "id": "qxxh5b",
+   "at": 1794616200000,
+   "text": "PhinsQuen returns the car. SiN drives PhinsQuen back after they are done",
+   "place": "4unfei"
   }
  ],
  "info": [
@@ -954,6 +1006,11 @@
    "id": "g67wbl",
    "title": "Transport color scheme for Orchestras made by PhinsQuen",
    "text": "https://docs.google.com/spreadsheets/d/1iemB4Z4YeHY0hLGdr98SPfIdk7WmXPXfYcOe2eWL8CA"
+  },
+  {
+   "id": "mu1hxd",
+   "title": "Key pickup",
+   "text": "We have a spot in Kansliet on the right side, for MF nothing is defined yet"
   }
  ],
  "warns": [
